@@ -246,12 +246,12 @@ function ServicesContent() {
         <div className="container mx-auto px-4">
           <div className="max-w-[90rem] mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {serviceCategories.map((category) => (
+              {serviceCategories.map((category, index) => (
                 <motion.div
                   key={category.id}
                   initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1, duration: 0.4 }}
                   className="relative bg-black rounded-2xl overflow-hidden aspect-[3/4] max-h-[420px] md:max-h-none transform transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl"
                 >
                   <Image
@@ -429,8 +429,7 @@ function ServicesContent() {
           <div className="max-w-3xl mx-auto text-center mb-16">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
               <h2 className="display-heading text-primary-800 mb-6" style={{ fontSize: 'clamp(2rem,5vw,3.5rem)' }}>
@@ -444,9 +443,8 @@ function ServicesContent() {
           
           <div className="max-w-6xl mx-auto relative space-y-6">
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
               className="group"
             >
@@ -467,9 +465,8 @@ function ServicesContent() {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
               className="group"
             >
@@ -490,9 +487,8 @@ function ServicesContent() {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
               className="group"
             >
