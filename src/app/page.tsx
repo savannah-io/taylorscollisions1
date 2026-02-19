@@ -2,8 +2,9 @@
 
 import Header from '../components/Header'
 import Footer from '../components/Footer'
-import { StarIcon, ClockIcon, ArrowRightIcon, ShieldCheckIcon, SparklesIcon } from '@heroicons/react/24/solid'
+import { StarIcon, ArrowRightIcon } from '@heroicons/react/24/solid'
 import { motion } from 'framer-motion'
+import { TextGenerateEffect } from '../components/ui/text-generate-effect'
 import ServiceReel from '../components/ServiceReel'
 import Image from 'next/image'
 import MouseFollowGradient from '../components/MouseFollowGradient'
@@ -33,7 +34,7 @@ export default function Home() {
       <section className="hero-section relative overflow-hidden">
         <MouseFollowGradient variant="dark" opacity={0.8} />
         {/* Main overlay gradient */}
-        <div className="absolute inset-0 bg-gradient-to-b from-primary-600/50 via-primary-700/25 to-primary-800/40 pointer-events-none"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-950/80 via-primary-900/65 to-primary-800/70 pointer-events-none"></div>
         <div className="absolute inset-0 bg-gradient-to-r from-primary-800/30 to-transparent pointer-events-none"></div>
         
         {/* Tech pattern overlay */}
@@ -70,59 +71,65 @@ export default function Home() {
                 Collision Auto Body Shop
               </span>
             </motion.div>
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-display font-bold mb-8 leading-[1.1] text-white drop-shadow-xl">
-              Expert Auto Body Repair in{' '}
-              <span className="text-primary-400 drop-shadow-xl">
-                Duluth, Georgia
-              </span>
+            <h1 className="display-heading text-[clamp(3rem,9vw,7.5rem)] text-white drop-shadow-2xl mb-2">
+              <TextGenerateEffect
+                words="EXPERT AUTO"
+                className="text-white block"
+                duration={0.3}
+              />
+              <span className="block">BODY REPAIR</span>
             </h1>
-            <p className="text-xl mb-12 text-gray-100 max-w-2xl leading-relaxed drop-shadow-lg font-medium">
-              Quality collision repair with exceptional customer service.
-              <span className="hidden sm:inline"> Get your car back to pre-accident condition with our skilled technicians.</span>
-            </p>
-            <div className="flex flex-col sm:flex-row gap-6">
+            <motion.p
+              className="display-heading text-[clamp(1.2rem,3.5vw,2.2rem)] text-primary-300 mb-8 mt-3"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.5 }}
+            >
+              IN DULUTH, GEORGIA
+            </motion.p>
+            <motion.div
+              className="flex flex-col sm:flex-row gap-4"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+            >
               <motion.a
                 href="#"
                 onClick={(e) => {
                   e.preventDefault();
                   document.getElementById('schedule')?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="inline-flex items-center justify-center bg-primary-600 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 hover:bg-primary-700 shadow-xl hover:shadow-2xl relative group overflow-hidden"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                className="inline-flex items-center justify-center bg-primary-600 hover:bg-primary-500 text-white px-10 py-4 font-black text-lg tracking-tight uppercase transition-all duration-200 hover:shadow-2xl hover:shadow-primary-500/40 hover:-translate-y-0.5"
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
               >
-                <span className="absolute inset-0 bg-gradient-to-r from-blue-400/0 via-blue-400/40 to-blue-400/0 opacity-0 group-hover:opacity-100 animate-shimmer"></span>
-                <span className="absolute inset-0 ring-2 ring-white/20 rounded-lg group-hover:ring-white/40 transition-all duration-300"></span>
                 Schedule Estimate
               </motion.a>
-              <motion.a 
-                href="/contact" 
-                className="inline-flex items-center justify-center border-2 border-white text-white hover:bg-white/20 px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 shadow-xl hover:shadow-2xl backdrop-blur-sm relative group overflow-hidden"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+              <motion.a
+                href="/contact"
+                className="inline-flex items-center justify-center border-2 border-white/60 hover:border-white text-white hover:bg-white/10 px-10 py-4 font-black text-lg tracking-tight uppercase transition-all duration-200 group"
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
               >
-                <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 opacity-0 group-hover:opacity-100 animate-shimmer"></span>
-                <span className="absolute inset-0 ring-2 ring-white/20 group-hover:ring-white/40 rounded-lg transition-all duration-300"></span>
-                <span className="relative">Contact Us</span>
+                <span>Contact Us</span>
                 <ArrowRightIcon className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
               </motion.a>
-            </div>
-            <motion.div 
-              className="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-6"
+            </motion.div>
+            <motion.div
+              className="mt-12 pt-8 border-t border-white/20 flex flex-wrap items-center gap-8"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
+              transition={{ delay: 0.8 }}
             >
               {[
-                { icon: <ShieldCheckIcon className="w-6 h-6" />, text: "Free Estimates" },
-                { icon: <SparklesIcon className="w-6 h-6" />, text: "Expert Technicians" },
-                { icon: <ClockIcon className="w-6 h-6" />, text: "Quick Turnaround" }
-              ].map((item, index) => (
-                <div key={index} className="flex items-center gap-4 text-white bg-black/20 backdrop-blur-sm p-4 rounded-xl border border-white/10 shadow-lg">
-                  <div className="bg-primary-500/30 p-3 rounded-xl shadow-lg">
-                    {item.icon}
-                  </div>
-                  <span className="font-medium tracking-wide drop-shadow-lg">{item.text}</span>
+                { value: "5.0★", label: "Google Rating" },
+                { value: "34+", label: "Verified Reviews" },
+                { value: "LIFETIME", label: "Warranty" },
+                { value: "FREE", label: "Estimates" },
+              ].map((stat, i) => (
+                <div key={i} className="flex flex-col">
+                  <span className="display-heading text-3xl text-white">{stat.value}</span>
+                  <span className="stat-label text-white/50 mt-1">{stat.label}</span>
                 </div>
               ))}
             </motion.div>
