@@ -51,3 +51,6 @@ calendar/*.json
 .vscode/
 *.swp
 *.swo
+
+# Git worktrees
+.worktrees/
