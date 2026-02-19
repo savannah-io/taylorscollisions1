@@ -206,29 +206,15 @@ function ServicesContent() {
 
         <div className="container mx-auto px-4 relative">
           <div className="max-w-3xl mx-auto text-center">
-            <div className="inline-block mb-4">
-              <div className="flex items-center gap-3 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">
-                <Image 
-                  src="/medal.svg" 
-                  alt="Certified Auto Body Shop" 
-                  width={24} 
-                  height={24}
-                  className="w-6 h-6"
-                />
-                <span className="text-sm font-medium text-white">Certified Auto Body Shop</span>
-                <svg className="w-5 h-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-              </div>
-            </div>
             <motion.h1 
-              className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6"
+              className="display-heading mb-6 text-white"
+              style={{ fontSize: 'clamp(2.8rem,8vw,6rem)' }}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <span className="text-white">Our Auto Body </span>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-100">Services</span>
+              OUR AUTO BODY<br />
+              <span className="text-primary-300">SERVICES.</span>
             </motion.h1>
             <motion.p 
               className="text-lg md:text-xl text-blue-50 leading-relaxed max-w-2xl mx-auto mb-8"
@@ -239,31 +225,15 @@ function ServicesContent() {
               Expert collision repair and auto body services in Duluth, GA. Quality work guaranteed.
             </motion.p>
 
-            <div className="flex justify-center gap-8">
-              <div className="group relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-primary-500 to-blue-500 rounded-xl blur-xl opacity-25 group-hover:opacity-40 transition-opacity duration-300"></div>
-                <div className="relative px-6 py-4 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 hover:border-white/30 transition-all duration-200">
-                  <div className="flex items-center justify-center mb-2">
-                    <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                    </svg>
-                  </div>
-                  <div className="text-3xl font-bold text-white mb-1 font-display">15+</div>
-                  <div className="text-sm text-blue-100 font-medium">Years Experience</div>
-                </div>
+            <div className="flex justify-center gap-8 md:gap-12 mt-8">
+              <div className="text-center">
+                <div className="display-heading text-white" style={{ fontSize: 'clamp(2rem,5vw,3.5rem)' }}>15+</div>
+                <div className="stat-label text-primary-300 mt-1">Years Experience</div>
               </div>
-
-              <div className="group relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-primary-500 rounded-xl blur-xl opacity-25 group-hover:opacity-40 transition-opacity duration-300"></div>
-                <div className="relative px-6 py-4 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 hover:border-white/30 transition-all duration-200">
-                  <div className="flex items-center justify-center mb-2">
-                    <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
-                    </svg>
-                  </div>
-                  <div className="text-3xl font-bold text-white mb-1 font-display">5000+</div>
-                  <div className="text-sm text-blue-100 font-medium">Cars Repaired</div>
-                </div>
+              <div className="w-px bg-white/20" />
+              <div className="text-center">
+                <div className="display-heading text-white" style={{ fontSize: 'clamp(2rem,5vw,3.5rem)' }}>5000+</div>
+                <div className="stat-label text-primary-300 mt-1">Cars Repaired</div>
               </div>
             </div>
           </div>
@@ -276,13 +246,13 @@ function ServicesContent() {
         <div className="container mx-auto px-4">
           <div className="max-w-[90rem] mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {serviceCategories.map((category) => (
+              {serviceCategories.map((category, index) => (
                 <motion.div
                   key={category.id}
                   initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  className="relative bg-black rounded-2xl overflow-hidden aspect-[3/4] transform transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl"
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1, duration: 0.4 }}
+                  className="relative bg-black rounded-2xl overflow-hidden aspect-[3/4] max-h-[420px] md:max-h-none transform transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl"
                 >
                   <Image
                     src={category.bgImage}
@@ -459,12 +429,11 @@ function ServicesContent() {
           <div className="max-w-3xl mx-auto text-center mb-16">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <h2 className="text-4xl md:text-5xl font-display font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-primary-900">
-                Why Expert Auto Body Repair Matters
+              <h2 className="display-heading text-primary-800 mb-6" style={{ fontSize: 'clamp(2rem,5vw,3.5rem)' }}>
+                WHY EXPERT<br />REPAIR MATTERS.
               </h2>
               <p className="text-lg text-gray-600 mb-8 leading-relaxed">
                 Modern vehicles are complex machines requiring specialized knowledge and equipment for proper repairs. Choosing the right auto body shop can make all the difference in your vehicle's safety and longevity.
@@ -474,15 +443,14 @@ function ServicesContent() {
           
           <div className="max-w-6xl mx-auto relative space-y-6">
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
               className="group"
             >
-              <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden flex items-center">
+              <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden flex flex-col md:flex-row items-start md:items-center border-l-4 border-l-primary-500">
                 <div className="absolute inset-0 bg-gradient-to-r from-primary-50/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div className="w-16 h-16 bg-primary-100 rounded-xl flex items-center justify-center shrink-0 mr-8 group-hover:scale-110 transition-transform duration-300 relative">
+                <div className="w-16 h-16 bg-primary-100 rounded-xl flex items-center justify-center shrink-0 mr-0 md:mr-8 mb-4 md:mb-0 group-hover:scale-110 transition-transform duration-300 relative">
                   <svg className="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                   </svg>
@@ -497,15 +465,14 @@ function ServicesContent() {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
               className="group"
             >
-              <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden flex items-center">
+              <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden flex flex-col md:flex-row items-start md:items-center border-l-4 border-l-primary-500">
                 <div className="absolute inset-0 bg-gradient-to-l from-primary-50/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div className="w-16 h-16 bg-primary-100 rounded-xl flex items-center justify-center shrink-0 mr-8 group-hover:scale-110 transition-transform duration-300 relative">
+                <div className="w-16 h-16 bg-primary-100 rounded-xl flex items-center justify-center shrink-0 mr-0 md:mr-8 mb-4 md:mb-0 group-hover:scale-110 transition-transform duration-300 relative">
                   <svg className="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
@@ -520,15 +487,14 @@ function ServicesContent() {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
               className="group"
             >
-              <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden flex items-center">
+              <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden flex flex-col md:flex-row items-start md:items-center border-l-4 border-l-primary-500">
                 <div className="absolute inset-0 bg-gradient-to-r from-primary-50/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div className="w-16 h-16 bg-primary-100 rounded-xl flex items-center justify-center shrink-0 mr-8 group-hover:scale-110 transition-transform duration-300 relative">
+                <div className="w-16 h-16 bg-primary-100 rounded-xl flex items-center justify-center shrink-0 mr-0 md:mr-8 mb-4 md:mb-0 group-hover:scale-110 transition-transform duration-300 relative">
                   <svg className="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
@@ -556,38 +522,30 @@ function ServicesContent() {
         </div>
 
         <div className="container mx-auto px-4 relative">
-          <div className="max-w-6xl mx-auto">
-            <div className="bg-white/5 backdrop-blur-[2px] rounded-xl py-8 px-12">
-              <div className="text-center">
-                <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-3">
-                  Ready to Get Your Car Back to Perfect?
-                </h2>
-                <p className="text-xl text-blue-50 mb-6">
-                  Schedule your appointment today and experience the difference expert auto body repair makes.
-                </p>
-                <div className="flex flex-col sm:flex-row justify-center gap-4">
-                  <a
-                    href="/"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      window.location.href = '/#schedule';
-                    }}
-                    className="inline-flex items-center justify-center px-8 py-3 bg-white hover:bg-gray-100 text-primary-600 font-semibold rounded-lg transition-colors duration-200"
-                  >
-                    Schedule Now
-                    <ArrowRightIcon className="w-5 h-5 ml-2" />
-                  </a>
-                  <a
-                    href="tel:+17704950050"
-                    className="inline-flex items-center justify-center px-8 py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-colors duration-200"
-                  >
-                    Call Us Now
-                    <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                    </svg>
-                  </a>
-                </div>
-              </div>
+          <div className="text-center">
+            <h2 className="display-heading text-white mb-4" style={{ fontSize: 'clamp(2rem,5vw,3.5rem)' }}>
+              READY TO GET<br />YOUR CAR FIXED?
+            </h2>
+            <p className="text-lg text-primary-200 mb-8 max-w-lg mx-auto">
+              Schedule your free estimate today. No surprises, just expert repairs.
+            </p>
+            <div className="flex flex-col sm:flex-row justify-center gap-4">
+              <a
+                href="tel:+17704950050"
+                className="inline-flex items-center justify-center px-8 py-4 bg-white text-primary-800 font-bold uppercase tracking-wider text-sm transition-all duration-200 hover:bg-primary-50"
+              >
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+                (770) 495-0050
+              </a>
+              <a
+                href="/schedule-now"
+                className="inline-flex items-center justify-center px-8 py-4 border-2 border-white text-white font-bold uppercase tracking-wider text-sm transition-all duration-200 hover:bg-white hover:text-primary-800"
+              >
+                Book Online
+                <ArrowRightIcon className="w-4 h-4 ml-2" />
+              </a>
             </div>
           </div>
         </div>

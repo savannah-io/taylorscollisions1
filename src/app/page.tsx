@@ -1,10 +1,12 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
-import { StarIcon, ClockIcon, ArrowRightIcon, ShieldCheckIcon, SparklesIcon } from '@heroicons/react/24/solid'
+import { StarIcon, ArrowRightIcon } from '@heroicons/react/24/solid'
 import { motion } from 'framer-motion'
-import ServiceReel from '../components/ServiceReel'
+import { TextGenerateEffect } from '../components/ui/text-generate-effect'
+import ServiceGrid from '../components/ServiceGrid'
 import Image from 'next/image'
 import MouseFollowGradient from '../components/MouseFollowGradient'
 import Script from 'next/script'
@@ -24,7 +26,42 @@ declare global {
   }
 }
 
+const FALLBACK_REVIEWS = [
+  {
+    text: "Max and the team did an incredible job on my 2020 Mazda CX-30. I'm extremely happy with the results and would recommend them to everyone!",
+    author: "Jarrett B.",
+    rating: 5
+  },
+  {
+    text: "The owner Max was AMAZING!! His work is top notch! I think my vehicle actually looks better than it did before I had the accident!",
+    author: "Jordan P.",
+    rating: 5
+  },
+  {
+    text: "Had a door out of alignment and Max fixed it in just a few minutes. No appointment. Just rolled in off the street. Great place.",
+    author: "Rob G.",
+    rating: 5
+  }
+]
+
 export default function Home() {
+  const [previewReviews, setPreviewReviews] = useState(FALLBACK_REVIEWS)
+
+  useEffect(() => {
+    fetch('/api/reviews?page=1&pageSize=3')
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if (data?.reviews?.length) {
+          setPreviewReviews(data.reviews.map((r: { text: string; author_name: string; rating: number }) => ({
+            text: r.text,
+            author: r.author_name,
+            rating: r.rating
+          })))
+        }
+      })
+      .catch(() => {/* keep fallback */})
+  }, [])
+
   return (
     <main className="min-h-screen">
       <Header />
@@ -33,7 +70,7 @@ export default function Home() {
       <section className="hero-section relative overflow-hidden">
         <MouseFollowGradient variant="dark" opacity={0.8} />
         {/* Main overlay gradient */}
-        <div className="absolute inset-0 bg-gradient-to-b from-primary-600/50 via-primary-700/25 to-primary-800/40 pointer-events-none"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-950/80 via-primary-900/65 to-primary-800/70 pointer-events-none"></div>
         <div className="absolute inset-0 bg-gradient-to-r from-primary-800/30 to-transparent pointer-events-none"></div>
         
         {/* Tech pattern overlay */}
@@ -60,72 +97,124 @@ export default function Home() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <motion.div
+            <h1 className="display-heading text-[clamp(3rem,9vw,7.5rem)] text-white drop-shadow-2xl mb-2">
+              <TextGenerateEffect
+                words="EXPERT AUTO"
+                className="text-white block"
+                duration={0.3}
+              />
+              <span className="block">BODY REPAIR</span>
+            </h1>
+            <motion.p
+              className="display-heading text-[clamp(1.2rem,3.5vw,2.2rem)] text-primary-300 mb-8 mt-3"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3 }}
-              className="mb-8 inline-block"
+              transition={{ delay: 0.5 }}
             >
-              <span className="bg-primary-600/20 text-white px-5 py-2.5 rounded-full text-sm font-semibold tracking-wider uppercase shadow-lg backdrop-blur-sm">
-                Collision Auto Body Shop
-              </span>
-            </motion.div>
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-display font-bold mb-8 leading-[1.1] text-white drop-shadow-xl">
-              Expert Auto Body Repair in{' '}
-              <span className="text-primary-400 drop-shadow-xl">
-                Duluth, Georgia
-              </span>
-            </h1>
-            <p className="text-xl mb-12 text-gray-100 max-w-2xl leading-relaxed drop-shadow-lg font-medium">
-              Quality collision repair with exceptional customer service.
-              <span className="hidden sm:inline"> Get your car back to pre-accident condition with our skilled technicians.</span>
-            </p>
-            <div className="flex flex-col sm:flex-row gap-6">
+              IN DULUTH, GEORGIA
+            </motion.p>
+            <motion.div
+              className="flex flex-col sm:flex-row gap-4"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+            >
               <motion.a
                 href="#"
                 onClick={(e) => {
                   e.preventDefault();
                   document.getElementById('schedule')?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="inline-flex items-center justify-center bg-primary-600 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 hover:bg-primary-700 shadow-xl hover:shadow-2xl relative group overflow-hidden"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                className="inline-flex items-center justify-center bg-primary-600 hover:bg-primary-500 text-white px-10 py-4 font-black text-lg tracking-tight uppercase transition-all duration-200 hover:shadow-2xl hover:shadow-primary-500/40 hover:-translate-y-0.5"
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
               >
-                <span className="absolute inset-0 bg-gradient-to-r from-blue-400/0 via-blue-400/40 to-blue-400/0 opacity-0 group-hover:opacity-100 animate-shimmer"></span>
-                <span className="absolute inset-0 ring-2 ring-white/20 rounded-lg group-hover:ring-white/40 transition-all duration-300"></span>
                 Schedule Estimate
               </motion.a>
-              <motion.a 
-                href="/contact" 
-                className="inline-flex items-center justify-center border-2 border-white text-white hover:bg-white/20 px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 shadow-xl hover:shadow-2xl backdrop-blur-sm relative group overflow-hidden"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+              <motion.a
+                href="/contact"
+                className="inline-flex items-center justify-center border-2 border-white/60 hover:border-white text-white hover:bg-white/10 px-10 py-4 font-black text-lg tracking-tight uppercase transition-all duration-200 group"
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
               >
-                <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 opacity-0 group-hover:opacity-100 animate-shimmer"></span>
-                <span className="absolute inset-0 ring-2 ring-white/20 group-hover:ring-white/40 rounded-lg transition-all duration-300"></span>
-                <span className="relative">Contact Us</span>
+                <span>Contact Us</span>
                 <ArrowRightIcon className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
               </motion.a>
-            </div>
-            <motion.div 
-              className="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-6"
+            </motion.div>
+            <motion.div
+              className="mt-12 pt-8 border-t border-white/20 flex flex-wrap items-center gap-8"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
+              transition={{ delay: 0.8 }}
             >
               {[
-                { icon: <ShieldCheckIcon className="w-6 h-6" />, text: "Free Estimates" },
-                { icon: <SparklesIcon className="w-6 h-6" />, text: "Expert Technicians" },
-                { icon: <ClockIcon className="w-6 h-6" />, text: "Quick Turnaround" }
-              ].map((item, index) => (
-                <div key={index} className="flex items-center gap-4 text-white bg-black/20 backdrop-blur-sm p-4 rounded-xl border border-white/10 shadow-lg">
-                  <div className="bg-primary-500/30 p-3 rounded-xl shadow-lg">
-                    {item.icon}
-                  </div>
-                  <span className="font-medium tracking-wide drop-shadow-lg">{item.text}</span>
+                { value: "5.0★", label: "Google Rating" },
+                { value: "34+", label: "Verified Reviews" },
+                { value: "LIFETIME", label: "Warranty" },
+                { value: "FREE", label: "Estimates" },
+              ].map((stat, i) => (
+                <div key={i} className="flex flex-col">
+                  <span className="display-heading text-3xl text-white">{stat.value}</span>
+                  <span className="stat-label text-white/50 mt-1">{stat.label}</span>
                 </div>
               ))}
             </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* CTA Interstitial */}
+      <section className="bg-primary-600 py-20 text-center relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage: `repeating-linear-gradient(
+              45deg,
+              transparent,
+              transparent 40px,
+              rgba(255,255,255,0.05) 40px,
+              rgba(255,255,255,0.05) 80px
+            )`
+          }}
+        />
+        <div className="container mx-auto px-4 relative">
+          <motion.p
+            className="stat-label text-primary-200 mb-4"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+          >
+            Free. Fast. No Obligation.
+          </motion.p>
+          <motion.h2
+            className="display-heading text-[clamp(2.5rem,7vw,5.5rem)] text-white mb-10"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            READY TO GET
+            <br />
+            <span className="text-primary-200">YOUR CAR FIXED?</span>
+          </motion.h2>
+          <motion.div
+            className="flex flex-col sm:flex-row gap-4 justify-center"
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+          >
+            <a
+              href="tel:+17704950050"
+              className="inline-flex items-center justify-center gap-3 bg-white text-primary-700 px-10 py-4 font-black text-lg uppercase tracking-tight hover:bg-primary-50 transition-colors duration-200"
+            >
+              CALL (770) 495-0050
+            </a>
+            <a
+              href="#schedule"
+              onClick={(e: React.MouseEvent) => { e.preventDefault(); document.getElementById('schedule')?.scrollIntoView({ behavior: 'smooth' }); }}
+              className="inline-flex items-center justify-center gap-3 border-2 border-white/60 text-white px-10 py-4 font-black text-lg uppercase tracking-tight hover:border-white hover:bg-white/10 transition-all duration-200"
+            >
+              Book Online ↓
+            </a>
           </motion.div>
         </div>
       </section>
@@ -202,192 +291,62 @@ export default function Home() {
         />
       </section>
 
-      {/* Trusted Brands Section */}
-      <section className="pt-8 pb-20 bg-gradient-to-b from-white to-sky-50/30 relative overflow-hidden">
-        <MouseFollowGradient variant="light" opacity={0.5} />
-        {/* Enhanced decorative elements */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-br from-sky-200/30 to-primary-200/30 rounded-full blur-[128px] mix-blend-multiply"></div>
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-br from-primary-200/30 to-sky-200/30 rounded-full blur-[128px] mix-blend-multiply"></div>
-          <div className="absolute inset-0" style={{ 
-            backgroundImage: `radial-gradient(circle at 50% 50%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 100%)`,
-            opacity: 0.8
-          }}></div>
-        </div>
-
-        <div className="container mx-auto px-4">
-          {/* Section Header */}
-          <motion.div 
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+      {/* Trust Band Section */}
+      <section className="bg-primary-900 py-20 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage: `repeating-linear-gradient(
+              -45deg,
+              transparent,
+              transparent 40px,
+              rgba(255,255,255,0.03) 40px,
+              rgba(255,255,255,0.03) 80px
+            )`
+          }}
+        />
+        <div className="container mx-auto px-4 relative">
+          <motion.p
+            className="stat-label text-primary-400 text-center mb-12"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
           >
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="inline-block px-4 py-1.5 mb-3 text-sm font-semibold tracking-wider text-primary-700 uppercase bg-primary-50/80 backdrop-blur-sm rounded-full shadow-sm border border-primary-100/50"
-            >
-              Our Guarantee
-            </motion.div>
-          </motion.div>
-
-          <motion.div 
-            className="grid grid-cols-1 md:grid-cols-5 items-center justify-items-center gap-16 relative"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            Our Guarantee
+          </motion.p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-12 max-w-5xl mx-auto">
+            {[
+              { value: "LIFETIME", label: "WARRANTY" },
+              { value: "FREE", label: "ESTIMATES" },
+              { value: "INSURANCE", label: "APPROVED" },
+              { value: "24/7", label: "TOWING" },
+            ].map((badge, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="text-center"
+              >
+                <p className="display-heading text-[clamp(1.8rem,4vw,3rem)] text-white">{badge.value}</p>
+                <p className="stat-label text-primary-400 mt-2">{badge.label}</p>
+              </motion.div>
+            ))}
+          </div>
+          <motion.div
+            className="flex justify-center items-center gap-10 mt-16 pt-12 border-t border-primary-700/50"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            transition={{ delay: 0.4 }}
           >
-            {/* Lifetime Warranty Emblem */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="text-center group"
-            >
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-sky-400/20 via-primary-400/20 to-sky-400/20 rounded-full blur-2xl transform group-hover:scale-110 transition-transform duration-500"></div>
-                <div className="w-32 h-32 rounded-full bg-gradient-to-br from-white via-sky-50 to-white flex items-center justify-center mb-6 mx-auto relative shadow-lg backdrop-blur-sm border border-sky-100/50 transform group-hover:scale-105 transition-all duration-500">
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-br from-sky-500/10 to-primary-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  <Image
-                    src="/icons/access.png"
-                    alt="Lifetime Warranty"
-                    width={56}
-                    height={56}
-                    className="w-14 h-14 transform group-hover:rotate-12 transition-transform duration-500"
-                  />
-                </div>
-              </div>
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.3 }}
-              >
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Lifetime Warranty</h3>
-                <p className="text-gray-600">On All Services</p>
-              </motion.div>
-            </motion.div>
-
-            {/* Free Estimates */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-center group"
-            >
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary-400/20 via-sky-400/20 to-primary-400/20 rounded-full blur-2xl transform group-hover:scale-110 transition-transform duration-500"></div>
-                <div className="w-32 h-32 rounded-full bg-gradient-to-br from-white via-sky-50 to-white flex items-center justify-center mb-6 mx-auto relative shadow-lg backdrop-blur-sm border border-sky-100/50 transform group-hover:scale-105 transition-all duration-500">
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary-500/10 to-sky-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  <Image
-                    src="/icons/free.png"
-                    alt="Free Estimates"
-                    width={56}
-                    height={56}
-                    className="w-14 h-14 transform group-hover:rotate-12 transition-transform duration-500"
-                  />
-                </div>
-              </div>
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.3 }}
-              >
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Free Estimates</h3>
-                <p className="text-gray-600">Quick & Accurate</p>
-              </motion.div>
-            </motion.div>
-
-            {/* PPG Logo */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="relative group"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-sky-400/20 via-primary-400/20 to-sky-400/20 rounded-2xl blur-2xl transform group-hover:scale-110 transition-transform duration-500"></div>
-              <div className="w-56 h-auto relative bg-gradient-to-br from-white via-sky-50/50 to-white rounded-2xl p-8 backdrop-blur-sm border border-sky-100/50 shadow-lg transform group-hover:scale-105 transition-all duration-500">
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-sky-500/5 to-primary-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <Image
-                  src="/images/PPG.png"
-                  alt="PPG Paint Company"
-                  width={200}
-                  height={200}
-                  className="object-contain relative transform group-hover:scale-105 transition-transform duration-500"
-                />
-              </div>
-            </motion.div>
-
-            {/* Insurance Companies Emblem */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="text-center group"
-            >
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-sky-400/20 via-primary-400/20 to-sky-400/20 rounded-full blur-2xl transform group-hover:scale-110 transition-transform duration-500"></div>
-                <div className="w-32 h-32 rounded-full bg-gradient-to-br from-white via-sky-50 to-white flex items-center justify-center mb-6 mx-auto relative shadow-lg backdrop-blur-sm border border-sky-100/50 transform group-hover:scale-105 transition-all duration-500">
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-br from-sky-500/10 to-primary-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  <Image
-                    src="/icons/calculator.png"
-                    alt="Insurance Approved"
-                    width={48}
-                    height={48}
-                    className="w-12 h-12 transform group-hover:rotate-12 transition-transform duration-500"
-                  />
-                </div>
-              </div>
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.3 }}
-              >
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Insurance Approved</h3>
-                <p className="text-gray-600">All Major & Minor Companies</p>
-              </motion.div>
-            </motion.div>
-
-            {/* Towing Service */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.5 }}
-              className="text-center group"
-            >
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary-400/20 via-sky-400/20 to-primary-400/20 rounded-full blur-2xl transform group-hover:scale-110 transition-transform duration-500"></div>
-                <div className="w-32 h-32 rounded-full bg-gradient-to-br from-white via-sky-50 to-white flex items-center justify-center mb-6 mx-auto relative shadow-lg backdrop-blur-sm border border-sky-100/50 transform group-hover:scale-105 transition-all duration-500">
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary-500/10 to-sky-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  <Image
-                    src="/icons/shipping.png"
-                    alt="Towing Service"
-                    width={56}
-                    height={56}
-                    className="w-14 h-14 transform group-hover:rotate-12 transition-transform duration-500"
-                  />
-                </div>
-              </div>
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.3 }}
-              >
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Towing Service</h3>
-                <p className="text-gray-600">24/7 Available</p>
-              </motion.div>
-            </motion.div>
+            <div className="opacity-75 hover:opacity-100 transition-opacity duration-300">
+              <Image src="/images/PPG.png" alt="PPG Certified" width={300} height={300} className="object-contain h-44 w-auto" />
+            </div>
+            <div className="w-px h-32 bg-primary-700/50" />
+            <a href="https://www.bbb.org/us/ga/duluth/profile/auto-body-repair-and-painting/taylors-collision-center-0443-6007405" target="_blank" rel="noopener noreferrer" className="opacity-75 hover:opacity-100 transition-opacity duration-300">
+              <Image src="/images/BBB.png" alt="Better Business Bureau" width={300} height={300} className="object-contain h-44 w-auto" />
+            </a>
           </motion.div>
         </div>
       </section>
@@ -408,17 +367,9 @@ export default function Home() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <span className="inline-block px-4 py-1 mb-2 text-sm font-semibold tracking-wider text-primary-700 uppercase bg-primary-50 rounded-full shadow-sm">
-              Our Expertise
-            </span>
-            <h2 className="text-4xl md:text-5xl font-display font-bold mb-4">
-              Expert Auto Body{' '}
-              <span className="relative inline-block">
-                <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-primary-800">
-                  Repair Services
-                </span>
-                <span className="absolute -bottom-2 left-0 w-full h-2.5 bg-primary-100/50 -rotate-1"></span>
-              </span>
+            <span className="stat-label text-primary-600 mb-4 block">Our Expertise</span>
+            <h2 className="display-heading text-[clamp(2.5rem,6vw,5rem)] text-gray-900 mb-4">
+              WHAT WE FIX.
             </h2>
           </motion.div>
         </div>
@@ -436,7 +387,7 @@ export default function Home() {
             </motion.p>
           </div>
 
-          <ServiceReel />
+          <ServiceGrid />
           
           <div className="text-center mt-6">
             <motion.a 
@@ -457,7 +408,7 @@ export default function Home() {
       <section className="py-24 bg-gradient-to-br from-primary-800 via-primary-700 to-primary-600 relative overflow-hidden">
         <MouseFollowGradient variant="dark" opacity={0.7} size={800} />
         <div className="container mx-auto px-4 relative">
-          <div className="max-w-3xl mx-auto text-center mb-16">
+          <div className="mb-16">
             <div className="inline-block mb-6">
               <div className="flex items-center gap-3 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">
                 <Image 
@@ -467,20 +418,21 @@ export default function Home() {
                   height={20}
                   className="w-5 h-5"
                 />
-                <span className="text-sm font-medium text-white">Verified Google Reviews</span>
+                <span className="stat-label text-white" style={{ fontSize: '0.7rem' }}>Verified Google Reviews</span>
                 <svg className="w-5 h-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
               </div>
             </div>
-            <motion.h2 
-              className="text-4xl md:text-5xl font-display font-bold mb-6"
+            <motion.h2
+              className="display-heading text-[clamp(2.5rem,6vw,4.5rem)] text-white mb-6"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <span className="text-white">Reviews from </span>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-100">our community</span>
+              WHAT OUR
+              <br />
+              <span className="text-primary-300">CUSTOMERS SAY.</span>
             </motion.h2>
             <motion.p 
               className="text-lg md:text-xl text-blue-50 leading-relaxed mx-auto"
@@ -494,34 +446,18 @@ export default function Home() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-16">
-            {[
-              {
-                text: "Max and the team did an incredible job on my 2020 Mazda CX-30. I'm extremely happy with the results and would recommend them to everyone!",
-                author: "Jarrett B.",
-                rating: 5
-              },
-              {
-                text: "The owner Max was AMAZING!! His work is top notch! I think my vehicle actually looks better than it did before I had the accident!",
-                author: "Jordan P.",
-                rating: 5
-              },
-              {
-                text: "Had a door out of alignment and Max fixed it in just a few minutes. No appointment. Just rolled in off the street. Great place.",
-                author: "Rob G.",
-                rating: 5
-              }
-            ].map((review, index) => (
+            {previewReviews.map((review, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                className="group relative bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:border-white/30 transition-all duration-200"
+                className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-6 border-l-4 border-l-primary-400 border border-white/10 hover:bg-white/15 transition-all duration-300"
               >
-                <div className="flex text-yellow-400 mb-4">
+                <div className="flex text-yellow-400 mb-5 gap-0.5">
                   {[...Array(review.rating)].map((_, i) => (
-                    <StarIcon key={i} className="h-5 w-5" />
+                    <StarIcon key={i} className="h-6 w-6" />
                   ))}
                 </div>
                 <p className="text-white/90 mb-6 leading-relaxed">&quot;{review.text}&quot;</p>
