@@ -298,15 +298,18 @@ export default function Home() {
             ))}
           </div>
           <motion.div
-            className="flex justify-center mt-16 pt-12 border-t border-primary-700/50"
+            className="flex justify-center items-center gap-10 mt-16 pt-12 border-t border-primary-700/50"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.4 }}
           >
-            <div className="text-center opacity-60 hover:opacity-90 transition-opacity duration-300">
-              <div className="stat-label text-primary-300 mb-1">Paint Partner</div>
-              <div className="display-heading text-white text-2xl tracking-widest">PPG CERTIFIED</div>
+            <div className="opacity-70 hover:opacity-100 transition-opacity duration-300">
+              <Image src="/images/PPG.png" alt="PPG Certified" width={100} height={50} className="object-contain h-12 w-auto" />
+            </div>
+            <div className="w-px h-10 bg-primary-700/50" />
+            <div className="opacity-70 hover:opacity-100 transition-opacity duration-300">
+              <Image src="/images/BBB.png" alt="Better Business Bureau" width={100} height={50} className="object-contain h-12 w-auto" />
             </div>
           </motion.div>
         </div>
