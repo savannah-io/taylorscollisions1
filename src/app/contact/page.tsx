@@ -101,30 +101,21 @@ export default function Contact() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white">
-                Get in{' '}
-                <span className="relative inline-block">
-                  <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-100 to-blue-200 drop-shadow-lg">
-                    Touch
-                  </span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-primary-500 blur-2xl opacity-30 scale-150"></div>
-                </span>
+              <h1 className="display-heading text-white" style={{ fontSize: 'clamp(2.8rem,8vw,6rem)' }}>
+                GET IN<br />
+                <span className="text-primary-300">TOUCH.</span>
               </h1>
             </motion.div>
 
             <motion.div
-              className="relative inline-block mb-8"
+              className="mb-8"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
             >
-              <div className="text-xl text-blue-50 leading-relaxed max-w-2xl mx-auto">
-                Have questions about our services? Need an estimate?{' '}
-                <span className="relative inline-block">
-                  <span className="relative z-10">We&apos;re here to help.</span>
-                  <span className="absolute bottom-0 left-0 right-0 h-3 bg-blue-400/20 -rotate-1"></span>
-                </span>
-              </div>
+              <p className="text-lg text-blue-100 max-w-xl mx-auto">
+                Have questions about our services? Need an estimate? We&apos;re here to help.
+              </p>
             </motion.div>
 
             <div className="flex justify-center gap-4 mb-8">
@@ -156,9 +147,7 @@ export default function Contact() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <h2 className="text-3xl font-display font-bold mb-8 text-gray-900">
-                Contact Information
-              </h2>
+              <h2 className="display-heading text-primary-800 mb-8" style={{ fontSize: 'clamp(1.5rem,3vw,2.5rem)' }}>CONTACT INFO</h2>
               <div className="space-y-6">
                 <div className="flex items-start gap-4">
                   <div className="bg-blue-400/20 p-3 rounded-lg">
@@ -234,9 +223,7 @@ export default function Contact() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              <h2 className="text-3xl font-display font-bold mb-8 text-gray-900">
-                Send Us a Message
-              </h2>
+              <h2 className="display-heading text-primary-800 mb-8" style={{ fontSize: 'clamp(1.5rem,3vw,2.5rem)' }}>SEND A MESSAGE</h2>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
@@ -326,9 +313,9 @@ export default function Contact() {
 
                 <button
                   type="submit"
-                  className="w-full btn btn-primary"
+                  className="w-full py-4 bg-primary-600 hover:bg-primary-700 text-white font-bold uppercase tracking-wider text-sm transition-all duration-200"
                 >
-                  Send Message
+                  Send Message →
                 </button>
               </form>
             </motion.div>
@@ -347,37 +334,31 @@ export default function Contact() {
         </div>
 
         <div className="container mx-auto px-4 relative">
-          <div className="max-w-6xl mx-auto">
-            <div className="bg-white/5 backdrop-blur-[2px] rounded-xl py-8 px-12">
-              <div className="text-center">
-                <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-3">
-                  Ready to Get Your Car Back to Perfect?
-                </h2>
-                <p className="text-xl text-blue-50 mb-6">
-                  Schedule your appointment today and experience the difference expert auto body repair makes.
-                </p>
-                <div className="flex flex-col sm:flex-row justify-center gap-4">
-                  <a
-                    href="/"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      window.location.href = '/#schedule';
-                    }}
-                    className="inline-flex items-center justify-center px-8 py-3 bg-white hover:bg-gray-100 text-primary-600 font-semibold rounded-lg transition-colors duration-200"
-                  >
-                    Schedule Now
-                    <ArrowRightIcon className="w-5 h-5 ml-2" />
-                  </a>
-                  <a
-                    href="tel:+17704950050"
-                    className="inline-flex items-center justify-center px-8 py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-colors duration-200"
-                  >
-                    Call Us Now
-                    <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                    </svg>
-                  </a>
-                </div>
+          <div>
+            <div className="text-center">
+              <h2 className="display-heading text-white mb-4" style={{ fontSize: 'clamp(2rem,5vw,3.5rem)' }}>
+                PREFER A<br />QUICK CALL?
+              </h2>
+              <p className="text-lg text-primary-200 mb-8 max-w-lg mx-auto">
+                Give us a call or book online — we'll get your vehicle back on the road fast.
+              </p>
+              <div className="flex flex-col sm:flex-row justify-center gap-4">
+                <a
+                  href="tel:+17704950050"
+                  className="inline-flex items-center justify-center px-8 py-4 bg-white text-primary-800 font-bold uppercase tracking-wider text-sm transition-all duration-200 hover:bg-primary-50"
+                >
+                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                  </svg>
+                  (770) 495-0050
+                </a>
+                <a
+                  href="/schedule-now"
+                  className="inline-flex items-center justify-center px-8 py-4 border-2 border-white text-white font-bold uppercase tracking-wider text-sm transition-all duration-200 hover:bg-white hover:text-primary-800"
+                >
+                  Book Online
+                  <ArrowRightIcon className="w-4 h-4 ml-2" />
+                </a>
               </div>
             </div>
           </div>
@@ -387,4 +368,4 @@ export default function Contact() {
       <Footer />
     </main>
   )
-} 
+}
