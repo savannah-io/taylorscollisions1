@@ -5,9 +5,13 @@ import { useRouter } from 'next/navigation'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { motion } from 'framer-motion'
-import MouseFollowGradient from '@/components/MouseFollowGradient'
 import { supabase } from '@/lib/supabase'
 import { formatPhoneNumber, validateEmail, validatePhone } from '@/utils/formatters'
+import {
+  StarIcon,
+  CurrencyDollarIcon,
+  HeartIcon,
+} from '@heroicons/react/24/outline'
 
 interface Reference {
   name: string;
@@ -218,54 +222,127 @@ export default function CareersPage() {
       <Header />
 
       {/* Hero Section */}
-      <section className="pt-32 pb-16 relative overflow-hidden bg-gradient-to-br from-primary-900 via-primary-800 to-primary-700">
-        <MouseFollowGradient variant="dark" opacity={0.3} />
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-3xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mb-6"
-            >
-              <h1 className="text-5xl md:text-6xl font-display font-bold mb-4 bg-gradient-to-r from-blue-500 to-blue-700 bg-clip-text text-transparent">
-                Join Our Team
-              </h1>
-              <div className="h-1 w-24 bg-blue-400 mx-auto rounded-full"></div>
-            </motion.div>
-            <motion.p 
-              className="text-xl text-gray-900 leading-relaxed"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-            >
-              Build your career with Taylor's Collision. We're looking for talented individuals who are passionate about auto body repair and customer service.
-            </motion.p>
+      <section className="bg-gradient-to-br from-primary-800 via-primary-700 to-primary-600 pt-32 pb-20 relative overflow-hidden">
+        {/* Animated background elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          {/* Large blurred circles */}
+          <div className="absolute w-[500px] h-[500px] -top-48 -left-48 bg-primary-400/20 rounded-full blur-3xl animate-blob"></div>
+          <div className="absolute w-[400px] h-[400px] -bottom-48 -right-48 bg-primary-300/20 rounded-full blur-3xl animate-blob animation-delay-2000"></div>
+          <div className="absolute w-[600px] h-[600px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-primary-500/20 rounded-full blur-3xl animate-blob animation-delay-4000"></div>
+
+          {/* Dot pattern overlay */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.15) 1px, transparent 0)', backgroundSize: '32px 32px' }}></div>
           </div>
         </div>
-        
-        {/* Decorative elements */}
-        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-b from-transparent to-gray-50"></div>
-        <div className="absolute -bottom-px left-0 right-0">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" className="w-full">
-            <path fill="#F9FAFB" fillOpacity="1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
-          </svg>
+
+        {/* Content */}
+        <div className="container mx-auto px-4 relative">
+          <div className="max-w-3xl mx-auto text-center">
+            <motion.div
+              className="mb-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <h1 className="display-heading text-white" style={{ fontSize: 'clamp(2.8rem,8vw,6rem)' }}>
+                JOIN THE<br />
+                <span className="text-primary-300">TEAM.</span>
+              </h1>
+            </motion.div>
+
+            <motion.div
+              className="mb-8"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
+              <p className="text-lg md:text-xl text-blue-50 leading-relaxed max-w-2xl mx-auto mb-8">
+                Build your career at Taylor&apos;s Collision — Duluth&apos;s trusted auto body shop. We&apos;re hiring skilled technicians who take pride in their craft.
+              </p>
+            </motion.div>
+
+            {/* Stats bar */}
+            <motion.div
+              className="flex justify-center gap-12 mt-8"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              <div className="text-center">
+                <div className="display-heading text-white" style={{ fontSize: 'clamp(2rem,5vw,3.5rem)' }}>15+</div>
+                <div className="stat-label text-primary-300 mt-1">Years in Business</div>
+              </div>
+              <div className="w-px bg-white/20" />
+              <div className="text-center">
+                <div className="display-heading text-white" style={{ fontSize: 'clamp(2rem,5vw,3.5rem)' }}>Family</div>
+                <div className="stat-label text-primary-300 mt-1">Owned</div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Why Join Us Section */}
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center mb-12">
+            <h2 className="display-heading text-primary-800" style={{ fontSize: 'clamp(2rem,4vw,3rem)' }}>
+              WHY JOIN<br />OUR TEAM?
+            </h2>
+          </div>
+          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Career Growth */}
+            <div className="border-l-4 border-l-primary-500 bg-white p-6 shadow-sm">
+              <div className="mb-4">
+                <StarIcon className="w-8 h-8 text-primary-600" />
+              </div>
+              <h3 className="font-bold text-gray-900 text-lg mb-2">Career Growth</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                Ongoing training and certification opportunities. Advance from technician to lead to shop manager.
+              </p>
+            </div>
+
+            {/* Competitive Pay */}
+            <div className="border-l-4 border-l-primary-500 bg-white p-6 shadow-sm">
+              <div className="mb-4">
+                <CurrencyDollarIcon className="w-8 h-8 text-primary-600" />
+              </div>
+              <h3 className="font-bold text-gray-900 text-lg mb-2">Competitive Pay</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                Top-of-market wages, performance bonuses, and full health benefits for full-time staff.
+              </p>
+            </div>
+
+            {/* Great Culture */}
+            <div className="border-l-4 border-l-primary-500 bg-white p-6 shadow-sm">
+              <div className="mb-4">
+                <HeartIcon className="w-8 h-8 text-primary-600" />
+              </div>
+              <h3 className="font-bold text-gray-900 text-lg mb-2">Great Culture</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                Family-owned business where your work is recognized. Tight-knit team environment.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Application Form Section */}
-      <section className="py-16 bg-gray-50">
+      <section id="apply-form" className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <motion.div 
-              className="bg-white rounded-2xl shadow-xl p-8 backdrop-blur-sm bg-opacity-95"
+            <div className="text-center mb-10">
+              <h2 className="display-heading text-primary-800" style={{ fontSize: 'clamp(2rem,4vw,3rem)' }}>
+                APPLY<br />NOW.
+              </h2>
+            </div>
+            <motion.div
+              className="bg-white rounded-2xl shadow-xl p-8"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
             >
-              <h2 className="text-3xl font-semibold text-gray-900 mb-8 pb-4 border-b border-gray-200">
-                Application Form
-              </h2>
-              
               <form onSubmit={handleSubmit} className="space-y-8">
                 {/* Personal Information Section */}
                 <div className="bg-gray-50 p-6 rounded-xl">
@@ -502,10 +579,10 @@ export default function CareersPage() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className={`w-full px-6 py-4 text-white font-semibold rounded-lg transition-all duration-200 text-lg
-                      ${isSubmitting 
-                        ? 'bg-gray-400 cursor-not-allowed' 
-                        : 'bg-primary-600 hover:bg-primary-700 active:bg-primary-800 transform hover:-translate-y-1'
+                    className={`w-full px-6 py-4 text-white font-bold uppercase tracking-wider text-lg transition-all duration-200 rounded-none
+                      ${isSubmitting
+                        ? 'bg-gray-400 cursor-not-allowed'
+                        : 'bg-primary-600 hover:bg-primary-700 active:bg-primary-800'
                       }`}
                   >
                     {isSubmitting ? (
@@ -516,18 +593,18 @@ export default function CareersPage() {
                         </svg>
                         Submitting...
                       </span>
-                    ) : 'Submit Application'}
+                    ) : 'SUBMIT APPLICATION →'}
                   </button>
                 </div>
 
                 {/* Status Message */}
                 {submitStatus.type && (
-                  <motion.div 
+                  <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     className={`p-4 rounded-lg ${
-                      submitStatus.type === 'success' 
-                        ? 'bg-green-50 text-green-800 border border-green-200' 
+                      submitStatus.type === 'success'
+                        ? 'bg-green-50 text-green-800 border border-green-200'
                         : 'bg-red-50 text-red-800 border border-red-200'
                     }`}
                   >
@@ -551,7 +628,44 @@ export default function CareersPage() {
         </div>
       </section>
 
+      {/* CTA Section */}
+      <section className="relative py-20">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-800 via-primary-700 to-primary-600">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `repeating-linear-gradient(45deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 1px, transparent 1px, transparent 40px)`,
+            backgroundSize: '40px 40px'
+          }}></div>
+        </div>
+
+        <div className="container mx-auto px-4 relative">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center">
+              <h2 className="display-heading text-white mb-4" style={{ fontSize: 'clamp(2rem,5vw,3.5rem)' }}>
+                QUESTIONS?<br />GIVE US A CALL.
+              </h2>
+              <p className="text-lg text-primary-200 mb-8 max-w-lg mx-auto">
+                We&apos;d love to talk to you about joining the team.
+              </p>
+              <div className="flex flex-col sm:flex-row justify-center gap-4">
+                <a
+                  href="tel:+17704950050"
+                  className="inline-flex items-center justify-center px-8 py-4 bg-white text-primary-800 font-bold uppercase tracking-wider text-sm transition-all duration-200 hover:bg-primary-50"
+                >
+                  (770) 495-0050
+                </a>
+                <a
+                  href="#apply-form"
+                  className="inline-flex items-center justify-center px-8 py-4 border-2 border-white text-white font-bold uppercase tracking-wider text-sm transition-all duration-200 hover:bg-white hover:text-primary-800"
+                >
+                  Apply Online
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <Footer />
     </main>
   )
-} 
+}
