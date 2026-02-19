@@ -137,6 +137,62 @@ export default function Home() {
         </div>
       </section>
 
+      {/* CTA Interstitial */}
+      <section className="bg-primary-600 py-20 text-center relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage: `repeating-linear-gradient(
+              45deg,
+              transparent,
+              transparent 40px,
+              rgba(255,255,255,0.05) 40px,
+              rgba(255,255,255,0.05) 80px
+            )`
+          }}
+        />
+        <div className="container mx-auto px-4 relative">
+          <motion.p
+            className="stat-label text-primary-200 mb-4"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+          >
+            Free. Fast. No Obligation.
+          </motion.p>
+          <motion.h2
+            className="display-heading text-[clamp(2.5rem,7vw,5.5rem)] text-white mb-10"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            READY TO GET
+            <br />
+            <span className="text-primary-200">YOUR CAR FIXED?</span>
+          </motion.h2>
+          <motion.div
+            className="flex flex-col sm:flex-row gap-4 justify-center"
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+          >
+            <a
+              href="tel:+17704950050"
+              className="inline-flex items-center justify-center gap-3 bg-white text-primary-700 px-10 py-4 font-black text-lg uppercase tracking-tight hover:bg-primary-50 transition-colors duration-200"
+            >
+              CALL (770) 495-0050
+            </a>
+            <a
+              href="#schedule"
+              onClick={(e: React.MouseEvent) => { e.preventDefault(); document.getElementById('schedule')?.scrollIntoView({ behavior: 'smooth' }); }}
+              className="inline-flex items-center justify-center gap-3 border-2 border-white/60 text-white px-10 py-4 font-black text-lg uppercase tracking-tight hover:border-white hover:bg-white/10 transition-all duration-200"
+            >
+              Book Online ↓
+            </a>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Booking Section */}
       <section id="schedule" className="py-16 relative overflow-hidden bg-gray-50">
         <MouseFollowGradient variant="light" opacity={0.6} />
@@ -326,7 +382,7 @@ export default function Home() {
       <section className="py-24 bg-gradient-to-br from-primary-800 via-primary-700 to-primary-600 relative overflow-hidden">
         <MouseFollowGradient variant="dark" opacity={0.7} size={800} />
         <div className="container mx-auto px-4 relative">
-          <div className="max-w-3xl mx-auto text-center mb-16">
+          <div className="mb-16">
             <div className="inline-block mb-6">
               <div className="flex items-center gap-3 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">
                 <Image 
@@ -336,20 +392,21 @@ export default function Home() {
                   height={20}
                   className="w-5 h-5"
                 />
-                <span className="text-sm font-medium text-white">Verified Google Reviews</span>
+                <span className="stat-label text-white" style={{ fontSize: '0.7rem' }}>Verified Google Reviews</span>
                 <svg className="w-5 h-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
               </div>
             </div>
-            <motion.h2 
-              className="text-4xl md:text-5xl font-display font-bold mb-6"
+            <motion.h2
+              className="display-heading text-[clamp(2.5rem,6vw,4.5rem)] text-white mb-6"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <span className="text-white">Reviews from </span>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-100">our community</span>
+              WHAT OUR
+              <br />
+              <span className="text-primary-300">CUSTOMERS SAY.</span>
             </motion.h2>
             <motion.p 
               className="text-lg md:text-xl text-blue-50 leading-relaxed mx-auto"
@@ -386,11 +443,11 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                className="group relative bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:border-white/30 transition-all duration-200"
+                className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-6 border-l-4 border-l-primary-400 border border-white/10 hover:bg-white/15 transition-all duration-300"
               >
-                <div className="flex text-yellow-400 mb-4">
+                <div className="flex text-yellow-400 mb-5 gap-0.5">
                   {[...Array(review.rating)].map((_, i) => (
-                    <StarIcon key={i} className="h-5 w-5" />
+                    <StarIcon key={i} className="h-6 w-6" />
                   ))}
                 </div>
                 <p className="text-white/90 mb-6 leading-relaxed">&quot;{review.text}&quot;</p>
