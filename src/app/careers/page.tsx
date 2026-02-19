@@ -158,6 +158,13 @@ export default function CareersPage() {
         throw insertError
       }
 
+      // Send email notification (fire and forget)
+      fetch('/api/notify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'application', data: { ...formData, resumeUrl } }),
+      }).catch(() => {})
+
       // Redirect to success page
       router.push('/careers/success')
 

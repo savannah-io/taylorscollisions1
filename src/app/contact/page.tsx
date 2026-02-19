@@ -43,6 +43,12 @@ export default function Contact() {
     if (error) {
       alert('There was an error sending your message.')
     } else {
+      // Send email notification (fire and forget)
+      fetch('/api/notify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'contact', data: formData }),
+      }).catch(() => {})
       alert('Message sent successfully!')
       setFormData({
         name: '',
