@@ -304,12 +304,12 @@ export default function Home() {
             viewport={{ once: true }}
             transition={{ delay: 0.4 }}
           >
-            <div className="opacity-70 hover:opacity-100 transition-opacity duration-300">
-              <Image src="/images/PPG.png" alt="PPG Certified" width={100} height={50} className="object-contain h-12 w-auto" />
+            <div className="opacity-75 hover:opacity-100 transition-opacity duration-300">
+              <Image src="/images/PPG.png" alt="PPG Certified" width={200} height={200} className="object-contain h-28 w-auto" />
             </div>
-            <div className="w-px h-10 bg-primary-700/50" />
-            <div className="opacity-70 hover:opacity-100 transition-opacity duration-300">
-              <Image src="/images/BBB.png" alt="Better Business Bureau" width={100} height={50} className="object-contain h-12 w-auto" />
+            <div className="w-px h-20 bg-primary-700/50" />
+            <div className="opacity-75 hover:opacity-100 transition-opacity duration-300">
+              <Image src="/images/BBB.png" alt="Better Business Bureau" width={200} height={200} className="object-contain h-28 w-auto" />
             </div>
           </motion.div>
         </div>
