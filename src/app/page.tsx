@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import { StarIcon, ArrowRightIcon } from '@heroicons/react/24/solid'
@@ -25,7 +26,42 @@ declare global {
   }
 }
 
+const FALLBACK_REVIEWS = [
+  {
+    text: "Max and the team did an incredible job on my 2020 Mazda CX-30. I'm extremely happy with the results and would recommend them to everyone!",
+    author: "Jarrett B.",
+    rating: 5
+  },
+  {
+    text: "The owner Max was AMAZING!! His work is top notch! I think my vehicle actually looks better than it did before I had the accident!",
+    author: "Jordan P.",
+    rating: 5
+  },
+  {
+    text: "Had a door out of alignment and Max fixed it in just a few minutes. No appointment. Just rolled in off the street. Great place.",
+    author: "Rob G.",
+    rating: 5
+  }
+]
+
 export default function Home() {
+  const [previewReviews, setPreviewReviews] = useState(FALLBACK_REVIEWS)
+
+  useEffect(() => {
+    fetch('/api/reviews?page=1&pageSize=3')
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if (data?.reviews?.length) {
+          setPreviewReviews(data.reviews.map((r: { text: string; author_name: string; rating: number }) => ({
+            text: r.text,
+            author: r.author_name,
+            rating: r.rating
+          })))
+        }
+      })
+      .catch(() => {/* keep fallback */})
+  }, [])
+
   return (
     <main className="min-h-screen">
       <Header />
@@ -305,12 +341,12 @@ export default function Home() {
             transition={{ delay: 0.4 }}
           >
             <div className="opacity-75 hover:opacity-100 transition-opacity duration-300">
-              <Image src="/images/PPG.png" alt="PPG Certified" width={200} height={200} className="object-contain h-28 w-auto" />
+              <Image src="/images/PPG.png" alt="PPG Certified" width={300} height={300} className="object-contain h-44 w-auto" />
             </div>
-            <div className="w-px h-20 bg-primary-700/50" />
-            <div className="opacity-75 hover:opacity-100 transition-opacity duration-300">
-              <Image src="/images/BBB.png" alt="Better Business Bureau" width={200} height={200} className="object-contain h-28 w-auto" />
-            </div>
+            <div className="w-px h-32 bg-primary-700/50" />
+            <a href="https://www.bbb.org/us/ga/duluth/profile/auto-body-repair-and-painting/taylors-collision-center-0443-6007405" target="_blank" rel="noopener noreferrer" className="opacity-75 hover:opacity-100 transition-opacity duration-300">
+              <Image src="/images/BBB.png" alt="Better Business Bureau" width={300} height={300} className="object-contain h-44 w-auto" />
+            </a>
           </motion.div>
         </div>
       </section>
@@ -410,23 +446,7 @@ export default function Home() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-16">
-            {[
-              {
-                text: "Max and the team did an incredible job on my 2020 Mazda CX-30. I'm extremely happy with the results and would recommend them to everyone!",
-                author: "Jarrett B.",
-                rating: 5
-              },
-              {
-                text: "The owner Max was AMAZING!! His work is top notch! I think my vehicle actually looks better than it did before I had the accident!",
-                author: "Jordan P.",
-                rating: 5
-              },
-              {
-                text: "Had a door out of alignment and Max fixed it in just a few minutes. No appointment. Just rolled in off the street. Great place.",
-                author: "Rob G.",
-                rating: 5
-              }
-            ].map((review, index) => (
+            {previewReviews.map((review, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
