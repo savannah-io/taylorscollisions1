@@ -61,16 +61,6 @@ export default function Home() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3 }}
-              className="mb-8 inline-block"
-            >
-              <span className="bg-primary-600/20 text-white px-5 py-2.5 rounded-full text-sm font-semibold tracking-wider uppercase shadow-lg backdrop-blur-sm">
-                Collision Auto Body Shop
-              </span>
-            </motion.div>
             <h1 className="display-heading text-[clamp(3rem,9vw,7.5rem)] text-white drop-shadow-2xl mb-2">
               <TextGenerateEffect
                 words="EXPERT AUTO"
@@ -314,13 +304,10 @@ export default function Home() {
             viewport={{ once: true }}
             transition={{ delay: 0.4 }}
           >
-            <Image
-              src="/images/PPG.png"
-              alt="PPG Paint Company — Certified Applicator"
-              width={140}
-              height={70}
-              className="object-contain brightness-0 invert opacity-50 hover:opacity-80 transition-opacity duration-300"
-            />
+            <div className="text-center opacity-60 hover:opacity-90 transition-opacity duration-300">
+              <div className="stat-label text-primary-300 mb-1">Paint Partner</div>
+              <div className="display-heading text-white text-2xl tracking-widest">PPG CERTIFIED</div>
+            </div>
           </motion.div>
         </div>
       </section>
