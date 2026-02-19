@@ -5,7 +5,7 @@ import Footer from '../components/Footer'
 import { StarIcon, ArrowRightIcon } from '@heroicons/react/24/solid'
 import { motion } from 'framer-motion'
 import { TextGenerateEffect } from '../components/ui/text-generate-effect'
-import ServiceReel from '../components/ServiceReel'
+import ServiceGrid from '../components/ServiceGrid'
 import Image from 'next/image'
 import MouseFollowGradient from '../components/MouseFollowGradient'
 import Script from 'next/script'
@@ -285,17 +285,9 @@ export default function Home() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <span className="inline-block px-4 py-1 mb-2 text-sm font-semibold tracking-wider text-primary-700 uppercase bg-primary-50 rounded-full shadow-sm">
-              Our Expertise
-            </span>
-            <h2 className="text-4xl md:text-5xl font-display font-bold mb-4">
-              Expert Auto Body{' '}
-              <span className="relative inline-block">
-                <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-primary-800">
-                  Repair Services
-                </span>
-                <span className="absolute -bottom-2 left-0 w-full h-2.5 bg-primary-100/50 -rotate-1"></span>
-              </span>
+            <span className="stat-label text-primary-600 mb-4 block">Our Expertise</span>
+            <h2 className="display-heading text-[clamp(2.5rem,6vw,5rem)] text-gray-900 mb-4">
+              WHAT WE FIX.
             </h2>
           </motion.div>
         </div>
@@ -313,7 +305,7 @@ export default function Home() {
             </motion.p>
           </div>
 
-          <ServiceReel />
+          <ServiceGrid />
           
           <div className="text-center mt-6">
             <motion.a 
