@@ -209,192 +209,62 @@ export default function Home() {
         />
       </section>
 
-      {/* Trusted Brands Section */}
-      <section className="pt-8 pb-20 bg-gradient-to-b from-white to-sky-50/30 relative overflow-hidden">
-        <MouseFollowGradient variant="light" opacity={0.5} />
-        {/* Enhanced decorative elements */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-br from-sky-200/30 to-primary-200/30 rounded-full blur-[128px] mix-blend-multiply"></div>
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-br from-primary-200/30 to-sky-200/30 rounded-full blur-[128px] mix-blend-multiply"></div>
-          <div className="absolute inset-0" style={{ 
-            backgroundImage: `radial-gradient(circle at 50% 50%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 100%)`,
-            opacity: 0.8
-          }}></div>
-        </div>
-
-        <div className="container mx-auto px-4">
-          {/* Section Header */}
-          <motion.div 
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+      {/* Trust Band Section */}
+      <section className="bg-primary-900 py-20 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage: `repeating-linear-gradient(
+              -45deg,
+              transparent,
+              transparent 40px,
+              rgba(255,255,255,0.03) 40px,
+              rgba(255,255,255,0.03) 80px
+            )`
+          }}
+        />
+        <div className="container mx-auto px-4 relative">
+          <motion.p
+            className="stat-label text-primary-400 text-center mb-12"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
           >
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="inline-block px-4 py-1.5 mb-3 text-sm font-semibold tracking-wider text-primary-700 uppercase bg-primary-50/80 backdrop-blur-sm rounded-full shadow-sm border border-primary-100/50"
-            >
-              Our Guarantee
-            </motion.div>
-          </motion.div>
-
-          <motion.div 
-            className="grid grid-cols-1 md:grid-cols-5 items-center justify-items-center gap-16 relative"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            Our Guarantee
+          </motion.p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 max-w-5xl mx-auto">
+            {[
+              { value: "LIFETIME", label: "WARRANTY" },
+              { value: "FREE", label: "ESTIMATES" },
+              { value: "INSURANCE", label: "APPROVED" },
+              { value: "24/7", label: "TOWING" },
+            ].map((badge, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="text-center"
+              >
+                <p className="display-heading text-[clamp(1.8rem,4vw,3rem)] text-white">{badge.value}</p>
+                <p className="stat-label text-primary-400 mt-2">{badge.label}</p>
+              </motion.div>
+            ))}
+          </div>
+          <motion.div
+            className="flex justify-center mt-16 pt-12 border-t border-primary-700/50"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            transition={{ delay: 0.4 }}
           >
-            {/* Lifetime Warranty Emblem */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="text-center group"
-            >
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-sky-400/20 via-primary-400/20 to-sky-400/20 rounded-full blur-2xl transform group-hover:scale-110 transition-transform duration-500"></div>
-                <div className="w-32 h-32 rounded-full bg-gradient-to-br from-white via-sky-50 to-white flex items-center justify-center mb-6 mx-auto relative shadow-lg backdrop-blur-sm border border-sky-100/50 transform group-hover:scale-105 transition-all duration-500">
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-br from-sky-500/10 to-primary-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  <Image
-                    src="/icons/access.png"
-                    alt="Lifetime Warranty"
-                    width={56}
-                    height={56}
-                    className="w-14 h-14 transform group-hover:rotate-12 transition-transform duration-500"
-                  />
-                </div>
-              </div>
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.3 }}
-              >
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Lifetime Warranty</h3>
-                <p className="text-gray-600">On All Services</p>
-              </motion.div>
-            </motion.div>
-
-            {/* Free Estimates */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-center group"
-            >
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary-400/20 via-sky-400/20 to-primary-400/20 rounded-full blur-2xl transform group-hover:scale-110 transition-transform duration-500"></div>
-                <div className="w-32 h-32 rounded-full bg-gradient-to-br from-white via-sky-50 to-white flex items-center justify-center mb-6 mx-auto relative shadow-lg backdrop-blur-sm border border-sky-100/50 transform group-hover:scale-105 transition-all duration-500">
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary-500/10 to-sky-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  <Image
-                    src="/icons/free.png"
-                    alt="Free Estimates"
-                    width={56}
-                    height={56}
-                    className="w-14 h-14 transform group-hover:rotate-12 transition-transform duration-500"
-                  />
-                </div>
-              </div>
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.3 }}
-              >
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Free Estimates</h3>
-                <p className="text-gray-600">Quick & Accurate</p>
-              </motion.div>
-            </motion.div>
-
-            {/* PPG Logo */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="relative group"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-sky-400/20 via-primary-400/20 to-sky-400/20 rounded-2xl blur-2xl transform group-hover:scale-110 transition-transform duration-500"></div>
-              <div className="w-56 h-auto relative bg-gradient-to-br from-white via-sky-50/50 to-white rounded-2xl p-8 backdrop-blur-sm border border-sky-100/50 shadow-lg transform group-hover:scale-105 transition-all duration-500">
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-sky-500/5 to-primary-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <Image
-                  src="/images/PPG.png"
-                  alt="PPG Paint Company"
-                  width={200}
-                  height={200}
-                  className="object-contain relative transform group-hover:scale-105 transition-transform duration-500"
-                />
-              </div>
-            </motion.div>
-
-            {/* Insurance Companies Emblem */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="text-center group"
-            >
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-sky-400/20 via-primary-400/20 to-sky-400/20 rounded-full blur-2xl transform group-hover:scale-110 transition-transform duration-500"></div>
-                <div className="w-32 h-32 rounded-full bg-gradient-to-br from-white via-sky-50 to-white flex items-center justify-center mb-6 mx-auto relative shadow-lg backdrop-blur-sm border border-sky-100/50 transform group-hover:scale-105 transition-all duration-500">
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-br from-sky-500/10 to-primary-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  <Image
-                    src="/icons/calculator.png"
-                    alt="Insurance Approved"
-                    width={48}
-                    height={48}
-                    className="w-12 h-12 transform group-hover:rotate-12 transition-transform duration-500"
-                  />
-                </div>
-              </div>
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.3 }}
-              >
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Insurance Approved</h3>
-                <p className="text-gray-600">All Major & Minor Companies</p>
-              </motion.div>
-            </motion.div>
-
-            {/* Towing Service */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.5 }}
-              className="text-center group"
-            >
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary-400/20 via-sky-400/20 to-primary-400/20 rounded-full blur-2xl transform group-hover:scale-110 transition-transform duration-500"></div>
-                <div className="w-32 h-32 rounded-full bg-gradient-to-br from-white via-sky-50 to-white flex items-center justify-center mb-6 mx-auto relative shadow-lg backdrop-blur-sm border border-sky-100/50 transform group-hover:scale-105 transition-all duration-500">
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary-500/10 to-sky-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  <Image
-                    src="/icons/shipping.png"
-                    alt="Towing Service"
-                    width={56}
-                    height={56}
-                    className="w-14 h-14 transform group-hover:rotate-12 transition-transform duration-500"
-                  />
-                </div>
-              </div>
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.3 }}
-              >
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Towing Service</h3>
-                <p className="text-gray-600">24/7 Available</p>
-              </motion.div>
-            </motion.div>
+            <Image
+              src="/images/PPG.png"
+              alt="PPG Paint Company — Certified Applicator"
+              width={140}
+              height={70}
+              className="object-contain brightness-0 invert opacity-50 hover:opacity-80 transition-opacity duration-300"
+            />
           </motion.div>
         </div>
       </section>
