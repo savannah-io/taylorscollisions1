@@ -94,7 +94,7 @@ export default function ReviewsPage() {
             <p className="text-lg md:text-xl text-blue-50 leading-relaxed mx-auto">
               We&apos;re proud of the work we do and the trust our customers place in us. Here&apos;s what they have to say about their experience with our services.
             </p>
-            <div className="flex justify-center gap-12 mt-8">
+            <div className="flex justify-center gap-8 md:gap-12 mt-8">
               <div className="text-center">
                 <div className="display-heading text-white" style={{ fontSize: 'clamp(2rem,5vw,3.5rem)' }}>{totalReviews}</div>
                 <div className="stat-label text-primary-300 mt-1">Verified Reviews</div>

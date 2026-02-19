@@ -277,7 +277,7 @@ export default function Home() {
           >
             Our Guarantee
           </motion.p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 max-w-5xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-12 max-w-5xl mx-auto">
             {[
               { value: "LIFETIME", label: "WARRANTY" },
               { value: "FREE", label: "ESTIMATES" },

@@ -57,7 +57,7 @@ export default function ServiceGrid() {
           className={`group relative bg-white border-2 border-gray-100 hover:border-primary-500
             rounded-2xl transition-all duration-300 hover:shadow-xl hover:-translate-y-1
             ${service.large
-              ? 'md:col-span-2 md:row-span-2 p-10 flex flex-col justify-between min-h-[320px]'
+              ? 'md:col-span-2 md:row-span-2 p-7 md:p-10 flex flex-col justify-between min-h-[320px]'
               : 'p-7'
             }`}
         >

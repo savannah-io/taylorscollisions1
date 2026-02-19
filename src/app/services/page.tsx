@@ -225,7 +225,7 @@ function ServicesContent() {
               Expert collision repair and auto body services in Duluth, GA. Quality work guaranteed.
             </motion.p>
 
-            <div className="flex justify-center gap-12 mt-8">
+            <div className="flex justify-center gap-8 md:gap-12 mt-8">
               <div className="text-center">
                 <div className="display-heading text-white" style={{ fontSize: 'clamp(2rem,5vw,3.5rem)' }}>15+</div>
                 <div className="stat-label text-primary-300 mt-1">Years Experience</div>
@@ -252,7 +252,7 @@ function ServicesContent() {
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  className="relative bg-black rounded-2xl overflow-hidden aspect-[3/4] transform transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl"
+                  className="relative bg-black rounded-2xl overflow-hidden aspect-[3/4] max-h-[420px] md:max-h-none transform transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl"
                 >
                   <Image
                     src={category.bgImage}
@@ -450,9 +450,9 @@ function ServicesContent() {
               transition={{ duration: 0.5, delay: 0.1 }}
               className="group"
             >
-              <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden flex items-center border-l-4 border-l-primary-500">
+              <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden flex flex-col md:flex-row items-start md:items-center border-l-4 border-l-primary-500">
                 <div className="absolute inset-0 bg-gradient-to-r from-primary-50/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div className="w-16 h-16 bg-primary-100 rounded-xl flex items-center justify-center shrink-0 mr-8 group-hover:scale-110 transition-transform duration-300 relative">
+                <div className="w-16 h-16 bg-primary-100 rounded-xl flex items-center justify-center shrink-0 mr-0 md:mr-8 mb-4 md:mb-0 group-hover:scale-110 transition-transform duration-300 relative">
                   <svg className="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                   </svg>
@@ -473,9 +473,9 @@ function ServicesContent() {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="group"
             >
-              <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden flex items-center border-l-4 border-l-primary-500">
+              <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden flex flex-col md:flex-row items-start md:items-center border-l-4 border-l-primary-500">
                 <div className="absolute inset-0 bg-gradient-to-l from-primary-50/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div className="w-16 h-16 bg-primary-100 rounded-xl flex items-center justify-center shrink-0 mr-8 group-hover:scale-110 transition-transform duration-300 relative">
+                <div className="w-16 h-16 bg-primary-100 rounded-xl flex items-center justify-center shrink-0 mr-0 md:mr-8 mb-4 md:mb-0 group-hover:scale-110 transition-transform duration-300 relative">
                   <svg className="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
@@ -496,9 +496,9 @@ function ServicesContent() {
               transition={{ duration: 0.5, delay: 0.3 }}
               className="group"
             >
-              <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden flex items-center border-l-4 border-l-primary-500">
+              <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden flex flex-col md:flex-row items-start md:items-center border-l-4 border-l-primary-500">
                 <div className="absolute inset-0 bg-gradient-to-r from-primary-50/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div className="w-16 h-16 bg-primary-100 rounded-xl flex items-center justify-center shrink-0 mr-8 group-hover:scale-110 transition-transform duration-300 relative">
+                <div className="w-16 h-16 bg-primary-100 rounded-xl flex items-center justify-center shrink-0 mr-0 md:mr-8 mb-4 md:mb-0 group-hover:scale-110 transition-transform duration-300 relative">
                   <svg className="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
