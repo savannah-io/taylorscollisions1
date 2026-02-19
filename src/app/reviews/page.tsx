@@ -87,39 +87,22 @@ export default function ReviewsPage() {
                 </svg>
               </div>
             </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-sans font-bold mb-6 text-white">
-             Community  Reviews
+            <h1 className="display-heading mb-6 text-white" style={{ fontSize: 'clamp(2.8rem,8vw,6rem)' }}>
+              CUSTOMER<br />
+              <span className="text-primary-300">REVIEWS.</span>
             </h1>
             <p className="text-lg md:text-xl text-blue-50 leading-relaxed mx-auto">
               We&apos;re proud of the work we do and the trust our customers place in us. Here&apos;s what they have to say about their experience with our services.
             </p>
-            <div className="flex justify-center gap-6 mt-8">
-              <div className="group relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-primary-500 to-blue-500 rounded-xl blur-xl opacity-25 group-hover:opacity-40 transition-opacity duration-300"></div>
-                <div className="relative px-8 py-6 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 hover:border-white/30 transition-all duration-200">
-                  <div className="flex items-center justify-center mb-2">
-                    <svg className="w-7 h-7 text-blue-400" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.88-11.71L10 14.17l-1.88-1.88a.996.996 0 1 0-1.41 1.41l2.59 2.59c.39.39 1.02.39 1.41 0L17.3 9.7a.996.996 0 1 0-1.41-1.41z"/>
-                    </svg>
-                  </div>
-                  <div className="text-4xl font-bold text-white mb-1 font-display">{totalReviews}</div>
-                  <div className="text-sm text-blue-100 font-medium">Verified Reviews</div>
-                </div>
+            <div className="flex justify-center gap-12 mt-8">
+              <div className="text-center">
+                <div className="display-heading text-white" style={{ fontSize: 'clamp(2rem,5vw,3.5rem)' }}>{totalReviews}</div>
+                <div className="stat-label text-primary-300 mt-1">Verified Reviews</div>
               </div>
-
-              <div className="group relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-primary-500 rounded-xl blur-xl opacity-25 group-hover:opacity-40 transition-opacity duration-300"></div>
-                <div className="relative px-8 py-6 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 hover:border-white/30 transition-all duration-200">
-                  <div className="flex items-center justify-center gap-1 mb-2">
-                    {[...Array(5)].map((_, i) => (
-                      <svg key={i} className="w-6 h-6 text-yellow-400" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-                      </svg>
-                    ))}
-                  </div>
-                  <div className="text-4xl font-bold text-white mb-1 font-display">5.0</div>
-                  <div className="text-sm text-blue-100 font-medium">Average Rating</div>
-                </div>
+              <div className="w-px bg-white/20" />
+              <div className="text-center">
+                <div className="display-heading text-white" style={{ fontSize: 'clamp(2rem,5vw,3.5rem)' }}>5.0★</div>
+                <div className="stat-label text-primary-300 mt-1">Average Rating</div>
               </div>
             </div>
           </div>
@@ -231,36 +214,30 @@ export default function ReviewsPage() {
 
         <div className="container mx-auto px-4 relative">
           <div className="max-w-6xl mx-auto">
-            <div className="bg-white/5 backdrop-blur-[2px] rounded-xl py-8 px-12">
-              <div className="text-center">
-                <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-3">
-                  Ready to Get Your Car Back to Perfect?
-                </h2>
-                <p className="text-xl text-blue-50 mb-6">
-                  Schedule your appointment today and experience the difference expert auto body repair makes.
-                </p>
-                <div className="flex flex-col sm:flex-row justify-center gap-4">
-                  <a
-                    href="/"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      window.location.href = '/#schedule';
-                    }}
-                    className="inline-flex items-center justify-center px-8 py-3 bg-white hover:bg-gray-100 text-primary-600 font-semibold rounded-lg transition-colors duration-200"
-                  >
-                    Schedule Now
-                    <ArrowRightIcon className="w-5 h-5 ml-2" />
-                  </a>
-                  <a
-                    href="tel:+17704950050"
-                    className="inline-flex items-center justify-center px-8 py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-colors duration-200"
-                  >
-                    Call Us Now
-                    <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                    </svg>
-                  </a>
-                </div>
+            <div className="text-center">
+              <h2 className="display-heading text-white mb-4" style={{ fontSize: 'clamp(2rem,5vw,3.5rem)' }}>
+                READY TO GET<br />YOUR CAR FIXED?
+              </h2>
+              <p className="text-lg text-primary-200 mb-8 max-w-lg mx-auto">
+                Join hundreds of satisfied Duluth drivers. Schedule your free estimate today.
+              </p>
+              <div className="flex flex-col sm:flex-row justify-center gap-4">
+                <a
+                  href="tel:+17704950050"
+                  className="inline-flex items-center justify-center px-8 py-4 bg-white text-primary-800 font-bold uppercase tracking-wider text-sm transition-all duration-200 hover:bg-primary-50"
+                >
+                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                  </svg>
+                  (770) 495-0050
+                </a>
+                <a
+                  href="/schedule-now"
+                  className="inline-flex items-center justify-center px-8 py-4 border-2 border-white text-white font-bold uppercase tracking-wider text-sm transition-all duration-200 hover:bg-white hover:text-primary-800"
+                >
+                  Book Online
+                  <ArrowRightIcon className="w-4 h-4 ml-2" />
+                </a>
               </div>
             </div>
           </div>
@@ -284,4 +261,4 @@ export default function ReviewsPage() {
       `}</style>
     </main>
   )
-} 
+}
