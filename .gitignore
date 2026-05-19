@@ -54,3 +54,6 @@ calendar/*.json
 
 # Git worktrees
 .worktrees/
+
+# Large unused raw 3D source assets (site uses public/models/*.glb)
+wrecked-cars/

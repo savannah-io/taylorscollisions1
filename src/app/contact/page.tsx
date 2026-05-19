@@ -37,18 +37,20 @@ export default function Contact() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const { name, email, phone, message, service } = formData
-    const { error } = await supabase.from('contact_messages').insert([
-      { name, email, phone, message, service }
-    ])
-    if (error) {
-      alert('There was an error sending your message.')
-    } else {
-      // Send email notification (fire and forget)
-      fetch('/api/notify', {
+    // Supabase is best-effort; the email is the source of truth so a
+    // missing/failed DB never drops a contact message.
+    try {
+      if (supabase) {
+        await supabase.from('contact_messages').insert([{ name, email, phone, message, service }])
+      }
+    } catch {/* non-fatal */}
+    try {
+      const res = await fetch('/api/notify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type: 'contact', data: formData }),
-      }).catch(() => {})
+      })
+      if (!res.ok) throw new Error('notify failed')
       alert('Message sent successfully!')
       setFormData({
         name: '',
@@ -57,6 +59,8 @@ export default function Contact() {
         message: '',
         service: 'General Inquiry'
       })
+    } catch {
+      alert('We could not send your message. Please call us at (770) 495-0050.')
     }
   }
 
@@ -176,8 +180,8 @@ export default function Contact() {
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-1">Email</h3>
                     <p className="text-gray-600">
-                      <a href="mailto:support@taylorscollision.com" className="hover:text-primary-600 transition-colors">
-                        support@taylorscollision.com
+                      <a href="mailto:info@taylorscollision.com" className="hover:text-primary-600 transition-colors">
+                        info@taylorscollision.com
                       </a>
                     </p>
                   </div>

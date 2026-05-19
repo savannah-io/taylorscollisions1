@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import nodemailer from 'nodemailer'
+import { confirmUrl } from '@/lib/booking-token'
 
-const NOTIFY_EMAIL = process.env.NOTIFY_EMAIL || 'support@taylorscollision.com'
+const NOTIFY_EMAIL = process.env.NOTIFY_EMAIL || 'info@taylorscollision.com'
 
 function createTransport() {
   return nodemailer.createTransport({
@@ -68,6 +69,35 @@ export async function POST(req: NextRequest) {
           <tr><td style="padding:8px;font-weight:bold">Time</td><td style="padding:8px">${data.event_start_time || ''}</td></tr>
           <tr style="background:#f5f7fa"><td style="padding:8px;font-weight:bold">Event Type</td><td style="padding:8px">${data.event_type_name || 'Collision Estimate'}</td></tr>
         </table>
+      `
+      break
+    }
+    case 'appointment_request': {
+      subject = `New Booking Request — ${data.name || 'Customer'} — ${data.preferred_date || ''} ${data.preferred_time || ''}`
+      const cu = confirmUrl({
+        name: data.name || '',
+        email: data.email || '',
+        phone: data.phone || '',
+        vehicle: data.vehicle || '',
+        date: data.preferred_date || '',
+        time: data.preferred_time || '',
+      })
+      html = `
+        <h2 style="color:#1e3a5f">New Booking Request — Taylor's Collision</h2>
+        <p style="font-family:sans-serif;color:#1e3a5f">Review the request, then click <b>Confirm</b> — the customer is emailed an appointment confirmation automatically.</p>
+        <table style="border-collapse:collapse;width:100%;font-family:sans-serif">
+          <tr><td style="padding:8px;font-weight:bold;width:160px">Name</td><td style="padding:8px">${data.name || ''}</td></tr>
+          <tr style="background:#f5f7fa"><td style="padding:8px;font-weight:bold">Email</td><td style="padding:8px"><a href="mailto:${data.email || ''}">${data.email || ''}</a></td></tr>
+          <tr><td style="padding:8px;font-weight:bold">Phone</td><td style="padding:8px"><a href="tel:${data.phone || ''}">${data.phone || ''}</a></td></tr>
+          <tr style="background:#f5f7fa"><td style="padding:8px;font-weight:bold">Requested Date</td><td style="padding:8px">${data.preferred_date || ''}</td></tr>
+          <tr><td style="padding:8px;font-weight:bold">Requested Time</td><td style="padding:8px">${data.preferred_time || ''}</td></tr>
+          <tr style="background:#f5f7fa"><td style="padding:8px;font-weight:bold">Vehicle</td><td style="padding:8px">${data.vehicle || '—'}</td></tr>
+          <tr><td style="padding:8px;font-weight:bold;vertical-align:top">Details</td><td style="padding:8px;white-space:pre-wrap">${data.notes || '—'}</td></tr>
+        </table>
+        <div style="margin:24px 0 8px">
+          <a href="${cu}" style="display:inline-block;background:#0ea5e9;color:#fff;text-decoration:none;font-family:sans-serif;font-weight:bold;font-size:15px;padding:14px 28px;border-radius:8px">✅ Confirm &amp; Email Customer</a>
+        </div>
+        <p style="font-family:sans-serif;color:#64748b;font-size:12px">Clicking opens a confirmation page; you confirm there and ${data.name || 'the customer'} is emailed automatically.</p>
       `
       break
     }

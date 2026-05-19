@@ -127,9 +127,9 @@ export function usePrivacyPolicy() {
               If you have any questions about this Privacy Policy, please contact us at:
             </p>
             <div className="mt-3 space-y-2">
-              <a href="mailto:support@taylorscollision.com" className="flex items-center gap-2 text-blue-600 hover:text-blue-700">
+              <a href="mailto:info@taylorscollision.com" className="flex items-center gap-2 text-blue-600 hover:text-blue-700">
                 <span className="w-1.5 h-1.5 rounded-full bg-blue-500/40" />
-                support@taylorscollision.com
+                info@taylorscollision.com
               </a>
               <a href="tel:(770) 495-0050" className="flex items-center gap-2 text-blue-600 hover:text-blue-700">
                 <span className="w-1.5 h-1.5 rounded-full bg-blue-500/40" />

@@ -37,9 +37,9 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ['var(--font-space-grotesk)'],
-        display: ['var(--font-space-grotesk)'],
-        montserrat: ['var(--font-montserrat)'],
+        sans: ['var(--font-body)', 'ui-sans-serif', 'system-ui'],
+        body: ['var(--font-body)', 'ui-sans-serif', 'system-ui'],
+        display: ['var(--font-display)', 'Bebas Neue', 'Impact', 'sans-serif'],
       },
       boxShadow: {
         'sharp': '5px 5px 0px 0px rgba(37,99,235,1)',
