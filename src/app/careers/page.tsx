@@ -11,7 +11,13 @@ import {
   StarIcon,
   CurrencyDollarIcon,
   HeartIcon,
+  ArrowRightIcon,
 } from '@heroicons/react/24/outline'
+
+const BRAND_BLUE = '#0ea5e9'
+
+const NOISE_BG =
+  "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.9'/></svg>\")"
 
 interface Reference {
   name: string;
@@ -115,64 +121,50 @@ export default function CareersPage() {
     setIsSubmitting(true)
     setSubmitStatus({ type: null, message: '' })
 
+    // Supabase (resume upload + row) is best-effort; the email to the
+    // shop is the source of truth so an application is never dropped.
+    let resumeUrl = ''
     try {
-      // Upload resume to Supabase Storage if present
-      let resumeUrl = ''
-      if (resume) {
-        const fileExt = resume.name.split('.').pop()
-        const fileName = `${Date.now()}-${formData.firstName}-${formData.lastName}.${fileExt}`
-        
-        const { data: uploadData, error: uploadError } = await supabase
-          .storage
-          .from('resumes')
-          .upload(fileName, resume)
-
-        if (uploadError) {
-          console.error('Resume upload error:', uploadError)
-          throw uploadError
+      if (supabase) {
+        if (resume) {
+          const fileExt = resume.name.split('.').pop()
+          const fileName = `${Date.now()}-${formData.firstName}-${formData.lastName}.${fileExt}`
+          const { data: uploadData, error: uploadError } = await supabase
+            .storage.from('resumes').upload(fileName, resume)
+          if (!uploadError && uploadData) resumeUrl = uploadData.path
         }
-        
-        resumeUrl = uploadData.path
-      }
-
-      // Save application data to Supabase
-      const { error: insertError } = await supabase
-        .from('job_applications')
-        .insert({
+        await supabase.from('job_applications').insert({
           first_name: formData.firstName,
           last_name: formData.lastName,
           email: formData.email,
           phone: formData.phone,
-          address: formData.address || '',  // Add default values for required fields
+          address: formData.address || '',
           city: formData.city || '',
           state: formData.state || '',
           zip: formData.zip || '',
           position: formData.position,
-          start_date: new Date().toISOString().split('T')[0],  // Current date as default
+          start_date: new Date().toISOString().split('T')[0],
           experience: formData.experience,
           resume_url: resumeUrl || null
         })
-
-      if (insertError) {
-        console.error('Application insert error:', insertError)
-        throw insertError
       }
+    } catch (dbErr) {
+      console.error('Supabase (non-fatal):', dbErr)
+    }
 
-      // Send email notification (fire and forget)
-      fetch('/api/notify', {
+    try {
+      const res = await fetch('/api/notify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type: 'application', data: { ...formData, resumeUrl } }),
-      }).catch(() => {})
-
-      // Redirect to success page
+      })
+      if (!res.ok) throw new Error('notify failed')
       router.push('/careers/success')
-
     } catch (error) {
       console.error('Error submitting application:', error)
       setSubmitStatus({
         type: 'error',
-        message: 'There was an error submitting your application. Please try again.'
+        message: 'There was an error submitting your application. Please call us at (770) 495-0050.'
       })
       setIsSubmitting(false)
     }
@@ -228,238 +220,264 @@ export default function CareersPage() {
     <main className="min-h-screen">
       <Header />
 
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary-800 via-primary-700 to-primary-600 pt-32 pb-20 relative overflow-hidden">
-        {/* Animated background elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          {/* Large blurred circles */}
-          <div className="absolute w-[500px] h-[500px] -top-48 -left-48 bg-primary-400/20 rounded-full blur-3xl animate-blob"></div>
-          <div className="absolute w-[400px] h-[400px] -bottom-48 -right-48 bg-primary-300/20 rounded-full blur-3xl animate-blob animation-delay-2000"></div>
-          <div className="absolute w-[600px] h-[600px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-primary-500/20 rounded-full blur-3xl animate-blob animation-delay-4000"></div>
+      {/* ============ HERO ============ */}
+      <section
+        className="relative overflow-hidden text-white pt-28 sm:pt-32 pb-16 sm:pb-20"
+        style={{ background: '#06121f' }}
+      >
+        {/* SVG noise grain */}
+        <div
+          aria-hidden
+          className="absolute inset-0 pointer-events-none mix-blend-overlay"
+          style={{ opacity: 0.28, backgroundImage: NOISE_BG }}
+        />
+        {/* Blue halos */}
+        <div
+          aria-hidden
+          className="absolute -top-32 -left-32 w-[520px] h-[520px] rounded-full pointer-events-none"
+          style={{
+            background:
+              'radial-gradient(circle, rgba(14,165,233,0.22) 0%, rgba(14,165,233,0.08) 40%, transparent 70%)',
+            filter: 'blur(40px)',
+          }}
+        />
+        <div
+          aria-hidden
+          className="absolute -bottom-40 -right-32 w-[560px] h-[560px] rounded-full pointer-events-none"
+          style={{
+            background:
+              'radial-gradient(circle, rgba(56,189,248,0.18) 0%, rgba(56,189,248,0.06) 40%, transparent 70%)',
+            filter: 'blur(48px)',
+          }}
+        />
+        {/* Top accent + bottom diag-stripe */}
+        <div aria-hidden className="absolute inset-x-0 top-0 h-1.5" style={{ background: BRAND_BLUE }} />
+        <div
+          aria-hidden
+          className="absolute inset-x-0 bottom-0"
+          style={{
+            height: 6,
+            opacity: 0.85,
+            backgroundImage: `repeating-linear-gradient(45deg, ${BRAND_BLUE} 0 12px, transparent 12px 24px)`,
+          }}
+        />
 
-          {/* Dot pattern overlay */}
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.15) 1px, transparent 0)', backgroundSize: '32px 32px' }}></div>
-          </div>
-        </div>
-
-        {/* Content */}
-        <div className="container mx-auto px-4 relative">
+        <div className="container relative">
           <div className="max-w-3xl mx-auto text-center">
             <motion.div
-              className="mb-6"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
+              initial={{ opacity: 0, x: -8 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.45 }}
+              className="inline-flex items-center justify-center gap-2 mb-5"
             >
-              <h1 className="display-heading text-white" style={{ fontSize: 'clamp(2.8rem,8vw,6rem)' }}>
-                JOIN THE<br />
-                <span className="text-primary-300">TEAM.</span>
-              </h1>
+              <span className="w-2 h-2 rounded-full" style={{ background: BRAND_BLUE, boxShadow: `0 0 12px ${BRAND_BLUE}` }} />
+              <span className="stat-label" style={{ color: BRAND_BLUE }}>Careers · Now Hiring</span>
+            </motion.div>
+
+            <motion.h1
+              className="font-display text-white leading-[0.88]"
+              style={{ fontSize: 'clamp(2.75rem,9vw,6.5rem)', letterSpacing: '0.005em' }}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55 }}
+            >
+              Join The
+              <br />
+              <span style={{ color: BRAND_BLUE, textShadow: '0 0 32px rgba(14,165,233,0.35)' }}>Team.</span>
+            </motion.h1>
+
+            <motion.p
+              className="text-white/80 leading-relaxed max-w-2xl mx-auto mt-6 mb-10 text-base sm:text-lg"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, delay: 0.08 }}
+            >
+              Build your career at Taylor&apos;s Collision — Duluth&apos;s trusted auto body shop. We&apos;re
+              hiring skilled technicians who take pride in their craft.
+            </motion.p>
+
+            <motion.div
+              className="flex flex-col xs:flex-row sm:flex-row gap-3 justify-center"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, delay: 0.16 }}
+            >
+              <a
+                href="#apply-form"
+                onClick={(e) => { e.preventDefault(); document.getElementById('apply-form')?.scrollIntoView({ behavior: 'smooth' }); }}
+                className="btn-cta btn-cta-primary"
+              >
+                Apply Now
+              </a>
+              <a href="tel:+17704950050" className="btn-cta btn-cta-ghost">
+                Call (770) 495-0050
+              </a>
             </motion.div>
 
             <motion.div
-              className="mb-8"
-              initial={{ opacity: 0, y: 20 }}
+              className="grid grid-cols-2 gap-3 sm:gap-6 mt-10 sm:mt-14 max-w-md mx-auto"
+              initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
+              transition={{ duration: 0.55, delay: 0.24 }}
             >
-              <p className="text-lg md:text-xl text-blue-50 leading-relaxed max-w-2xl mx-auto mb-8">
-                Build your career at Taylor&apos;s Collision — Duluth&apos;s trusted auto body shop. We&apos;re hiring skilled technicians who take pride in their craft.
-              </p>
-            </motion.div>
-
-            {/* Stats bar */}
-            <motion.div
-              className="flex justify-center gap-12 mt-8"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
-              <div className="text-center">
-                <div className="display-heading text-white" style={{ fontSize: 'clamp(2rem,5vw,3.5rem)' }}>15+</div>
-                <div className="stat-label text-primary-300 mt-1">Years in Business</div>
+              <div
+                className="rounded-2xl px-5 py-4"
+                style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.12)' }}
+              >
+                <p className="font-display text-2xl sm:text-3xl leading-none" style={{ color: BRAND_BLUE }}>15+</p>
+                <p className="stat-label mt-2 text-white/70">Years in Business</p>
               </div>
-              <div className="w-px bg-white/20" />
-              <div className="text-center">
-                <div className="display-heading text-white" style={{ fontSize: 'clamp(2rem,5vw,3.5rem)' }}>Family</div>
-                <div className="stat-label text-primary-300 mt-1">Owned</div>
+              <div
+                className="rounded-2xl px-5 py-4"
+                style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.12)' }}
+              >
+                <p className="font-display text-2xl sm:text-3xl leading-none" style={{ color: BRAND_BLUE }}>Family</p>
+                <p className="stat-label mt-2 text-white/70">Owned · Local</p>
               </div>
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Why Join Us Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center mb-12">
-            <h2 className="display-heading text-primary-800" style={{ fontSize: 'clamp(2rem,4vw,3rem)' }}>
-              WHY JOIN<br />OUR TEAM?
+      {/* ============ WHY JOIN US ============ */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-primary-50/60 via-white to-primary-50/60 py-16 sm:py-24">
+        <div className="container relative">
+          <div className="max-w-3xl mx-auto text-center mb-10 sm:mb-14">
+            <div className="inline-flex items-center justify-center gap-2 mb-4">
+              <span className="w-2 h-2 rounded-full bg-primary-500" />
+              <span className="stat-label text-primary-600">Why Join Us</span>
+            </div>
+            <h2
+              className="font-display text-primary-900 leading-[0.9]"
+              style={{ fontSize: 'clamp(2.25rem,6vw,4rem)', letterSpacing: '0.005em' }}
+            >
+              The Shop. The Crew.
+              <br />
+              <span className="text-primary-500">The Future.</span>
             </h2>
           </div>
-          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Career Growth */}
-            <div className="border-l-4 border-l-primary-500 bg-white p-6 shadow-sm">
-              <div className="mb-4">
-                <StarIcon className="w-8 h-8 text-primary-600" />
-              </div>
-              <h3 className="font-bold text-gray-900 text-lg mb-2">Career Growth</h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
-                Ongoing training and certification opportunities. Advance from technician to lead to shop manager.
-              </p>
-            </div>
 
-            {/* Competitive Pay */}
-            <div className="border-l-4 border-l-primary-500 bg-white p-6 shadow-sm">
-              <div className="mb-4">
-                <CurrencyDollarIcon className="w-8 h-8 text-primary-600" />
-              </div>
-              <h3 className="font-bold text-gray-900 text-lg mb-2">Competitive Pay</h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
-                Top-of-market wages, performance bonuses, and full health benefits for full-time staff.
-              </p>
-            </div>
-
-            {/* Great Culture */}
-            <div className="border-l-4 border-l-primary-500 bg-white p-6 shadow-sm">
-              <div className="mb-4">
-                <HeartIcon className="w-8 h-8 text-primary-600" />
-              </div>
-              <h3 className="font-bold text-gray-900 text-lg mb-2">Great Culture</h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
-                Family-owned business where your work is recognized. Tight-knit team environment.
-              </p>
-            </div>
+          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+            {[
+              { Icon: StarIcon, title: 'Career Growth', body: 'Ongoing training and certification opportunities. Advance from technician to lead to shop manager.' },
+              { Icon: CurrencyDollarIcon, title: 'Competitive Pay', body: 'Top-of-market wages, performance bonuses, and full health benefits for full-time staff.' },
+              { Icon: HeartIcon, title: 'Great Culture', body: 'Family-owned business where your work is recognized. Tight-knit team environment.' },
+            ].map(({ Icon, title, body }, i) => (
+              <motion.div
+                key={title}
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.08 * i }}
+                className="group rounded-2xl bg-white ring-1 ring-primary-200/60 shadow-[0_18px_40px_-22px_rgba(2,132,199,0.3)] hover:shadow-[0_28px_50px_-22px_rgba(2,132,199,0.45)] hover:ring-primary-400/60 transition-all duration-300 p-6 sm:p-7"
+              >
+                <div
+                  className="inline-flex items-center justify-center w-12 h-12 rounded-xl mb-4"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(14,165,233,0.18) 0%, rgba(14,165,233,0.04) 100%)',
+                    border: '1px solid rgba(14,165,233,0.28)',
+                  }}
+                >
+                  <Icon className="w-6 h-6" style={{ color: BRAND_BLUE }} />
+                </div>
+                <h3 className="font-display tracking-[0.06em] text-primary-900 text-xl uppercase mb-2">{title}</h3>
+                <p className="text-primary-900/70 text-[14.5px] leading-relaxed">{body}</p>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Application Form Section */}
-      <section id="apply-form" className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
+      {/* ============ APPLICATION FORM ============ */}
+      <section id="apply-form" className="relative bg-gradient-to-b from-primary-50/30 via-white to-primary-50/30 py-14 sm:py-20">
+        <div className="container">
           <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-10">
-              <h2 className="display-heading text-primary-800" style={{ fontSize: 'clamp(2rem,4vw,3rem)' }}>
-                APPLY<br />NOW.
+            <div className="text-center mb-8 sm:mb-12">
+              <div className="inline-flex items-center justify-center gap-2 mb-3">
+                <span className="w-2 h-2 rounded-full bg-primary-500" />
+                <span className="stat-label text-primary-600">Application</span>
+              </div>
+              <h2
+                className="font-display text-primary-900 leading-[0.9]"
+                style={{ fontSize: 'clamp(2.25rem,6vw,4rem)', letterSpacing: '0.005em' }}
+              >
+                Apply
+                <br />
+                <span className="text-primary-500">Today.</span>
               </h2>
             </div>
+
             <motion.div
-              className="bg-white rounded-2xl shadow-xl p-8"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
+              className="bg-white rounded-2xl shadow-[0_30px_60px_-30px_rgba(2,132,199,0.3)] ring-1 ring-primary-200/60 p-4 sm:p-8 lg:p-10"
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
             >
-              <form onSubmit={handleSubmit} className="space-y-8">
-                {/* Personal Information Section */}
-                <div className="bg-gray-50 p-6 rounded-xl">
-                  <h3 className="text-xl font-semibold text-gray-800 mb-4">Personal Information</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
+                {/* Personal Information */}
+                <fieldset className="bg-primary-50/40 ring-1 ring-primary-100 p-4 sm:p-6 rounded-xl">
+                  <legend className="font-display tracking-[0.06em] uppercase text-primary-900 text-base sm:text-lg px-2">
+                    Personal Information
+                  </legend>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 mt-3">
                     <div>
-                      <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-2">
-                        First Name
-                      </label>
+                      <label htmlFor="firstName" className="stat-label text-primary-700 block mb-1.5">First Name</label>
                       <input
-                        type="text"
-                        id="firstName"
-                        name="firstName"
-                        required
-                        value={formData.firstName}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                        type="text" id="firstName" name="firstName" required
+                        value={formData.firstName} onChange={handleInputChange}
+                        className="w-full h-12 px-4 bg-white border border-primary-200 rounded-lg text-primary-900 placeholder:text-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500 transition-colors"
                       />
                     </div>
-
                     <div>
-                      <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-2">
-                        Last Name
-                      </label>
+                      <label htmlFor="lastName" className="stat-label text-primary-700 block mb-1.5">Last Name</label>
                       <input
-                        type="text"
-                        id="lastName"
-                        name="lastName"
-                        required
-                        value={formData.lastName}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                        type="text" id="lastName" name="lastName" required
+                        value={formData.lastName} onChange={handleInputChange}
+                        className="w-full h-12 px-4 bg-white border border-primary-200 rounded-lg text-primary-900 placeholder:text-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500 transition-colors"
                       />
                     </div>
-
                     <div>
-                      <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                        Email Address
-                      </label>
+                      <label htmlFor="email" className="stat-label text-primary-700 block mb-1.5">Email Address</label>
                       <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        required
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                          formErrors.email ? 'border-red-500' : 'border-gray-300'
-                        }`}
+                        type="email" id="email" name="email" required
+                        value={formData.email} onChange={handleInputChange}
+                        className={`w-full h-12 px-4 bg-white border rounded-lg text-primary-900 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500 transition-colors ${formErrors.email ? 'border-red-500' : 'border-primary-200'}`}
                       />
-                      {formErrors.email && (
-                        <p className="mt-1 text-sm text-red-600">{formErrors.email}</p>
-                      )}
+                      {formErrors.email && <p className="mt-1.5 text-xs text-red-600">{formErrors.email}</p>}
                     </div>
-
                     <div>
-                      <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                        Phone Number
-                      </label>
+                      <label htmlFor="phone" className="stat-label text-primary-700 block mb-1.5">Phone Number</label>
                       <input
-                        type="tel"
-                        id="phone"
-                        name="phone"
-                        required
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                          formErrors.phone ? 'border-red-500' : 'border-gray-300'
-                        }`}
-                        placeholder="(555) 555-5555"
+                        type="tel" id="phone" name="phone" required placeholder="(555) 555-5555"
+                        value={formData.phone} onChange={handleInputChange}
+                        className={`w-full h-12 px-4 bg-white border rounded-lg text-primary-900 placeholder:text-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500 transition-colors ${formErrors.phone ? 'border-red-500' : 'border-primary-200'}`}
                       />
-                      {formErrors.phone && (
-                        <p className="mt-1 text-sm text-red-600">{formErrors.phone}</p>
-                      )}
+                      {formErrors.phone && <p className="mt-1.5 text-xs text-red-600">{formErrors.phone}</p>}
                     </div>
                   </div>
-                </div>
+                </fieldset>
 
-                {/* Professional Information Section */}
-                <div className="bg-gray-50 p-6 rounded-xl">
-                  <h3 className="text-xl font-semibold text-gray-800 mb-4">Professional Information</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Professional Information */}
+                <fieldset className="bg-primary-50/40 ring-1 ring-primary-100 p-4 sm:p-6 rounded-xl">
+                  <legend className="font-display tracking-[0.06em] uppercase text-primary-900 text-base sm:text-lg px-2">
+                    Professional Information
+                  </legend>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 mt-3">
                     <div>
-                      <label htmlFor="experience" className="block text-sm font-medium text-gray-700 mb-2">
-                        Years of Experience
-                      </label>
+                      <label htmlFor="experience" className="stat-label text-primary-700 block mb-1.5">Years of Experience</label>
                       <input
-                        type="number"
-                        id="experience"
-                        name="experience"
-                        required
-                        min="0"
-                        max="50"
-                        value={formData.experience}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                        type="number" id="experience" name="experience" required min="0" max="50"
+                        value={formData.experience} onChange={handleInputChange}
+                        className="w-full h-12 px-4 bg-white border border-primary-200 rounded-lg text-primary-900 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500 transition-colors"
                       />
                     </div>
-
                     <div>
-                      <label htmlFor="position" className="block text-sm font-medium text-gray-700 mb-2">
-                        Position
-                      </label>
+                      <label htmlFor="position" className="stat-label text-primary-700 block mb-1.5">Position</label>
                       <select
-                        id="position"
-                        name="position"
-                        required
-                        value={formData.position}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                        id="position" name="position" required
+                        value={formData.position} onChange={handleInputChange}
+                        className="w-full h-12 px-4 bg-white border border-primary-200 rounded-lg text-primary-900 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500 transition-colors"
                       >
                         <option value="">Select a position</option>
                         <option value="Auto Body Technician">Auto Body Technician</option>
@@ -468,165 +486,128 @@ export default function CareersPage() {
                         <option value="Customer Service">Customer Service</option>
                       </select>
                     </div>
-
-                    <div className="col-span-2">
-                      <label htmlFor="resume" className="block text-sm font-medium text-gray-700 mb-2">
-                        Resume (PDF, DOC, DOCX - Max 10MB)
-                      </label>
+                    <div className="md:col-span-2">
+                      <label htmlFor="resume" className="stat-label text-primary-700 block mb-1.5">Resume (PDF, DOC, DOCX — Max 10MB)</label>
                       <input
-                        type="file"
-                        id="resume"
-                        name="resume"
-                        accept=".pdf,.doc,.docx"
-                        onChange={handleFileChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                        type="file" id="resume" name="resume" accept=".pdf,.doc,.docx" onChange={handleFileChange}
+                        className="w-full px-4 py-3 bg-white border border-primary-200 rounded-lg text-primary-900 text-sm file:mr-3 file:px-3 file:py-1.5 file:rounded-md file:border-0 file:bg-primary-100 file:text-primary-700 hover:file:bg-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500 transition-colors"
                       />
                     </div>
                   </div>
-                </div>
+                </fieldset>
 
-                {/* References Section */}
-                <div className="bg-gray-50 p-6 rounded-xl">
-                  <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-xl font-semibold text-gray-800">References</h3>
+                {/* References */}
+                <fieldset className="bg-primary-50/40 ring-1 ring-primary-100 p-4 sm:p-6 rounded-xl">
+                  <legend className="font-display tracking-[0.06em] uppercase text-primary-900 text-base sm:text-lg px-2">
+                    References
+                  </legend>
+                  <div className="flex items-center justify-end mt-2 mb-4">
                     <button
-                      type="button"
-                      onClick={addReference}
-                      className="px-4 py-2 text-sm font-medium text-primary-600 hover:text-primary-700 bg-white rounded-lg border border-primary-600 hover:border-primary-700 transition-colors"
+                      type="button" onClick={addReference}
+                      className="text-xs sm:text-sm font-semibold text-primary-700 hover:text-primary-900 bg-white border border-primary-300 hover:border-primary-500 px-3 py-1.5 rounded-md transition-colors"
                     >
-                      Add Reference
+                      + Add Reference
                     </button>
                   </div>
-                  
-                  {formData.references.map((reference, index) => (
-                    <div key={index} className="mb-6 p-4 bg-white rounded-lg border border-gray-200">
-                      <div className="flex justify-between items-center mb-4">
-                        <h4 className="text-lg font-medium text-gray-700">Reference #{index + 1}</h4>
-                        {index > 0 && (
-                          <button
-                            type="button"
-                            onClick={() => removeReference(index)}
-                            className="text-red-600 hover:text-red-700 text-sm"
-                          >
-                            Remove
-                          </button>
-                        )}
-                      </div>
-                      
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Full Name
-                          </label>
-                          <input
-                            type="text"
-                            required
-                            value={reference.name}
-                            onChange={(e) => handleReferenceChange(index, 'name', e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                          />
-                        </div>
-                        
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Relationship
-                          </label>
-                          <input
-                            type="text"
-                            required
-                            value={reference.relationship}
-                            onChange={(e) => handleReferenceChange(index, 'relationship', e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                          />
-                        </div>
-                        
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Email Address
-                          </label>
-                          <input
-                            type="email"
-                            required
-                            value={reference.email}
-                            onChange={(e) => handleReferenceChange(index, 'email', e.target.value)}
-                            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                              formErrors.references[index]?.email ? 'border-red-500' : 'border-gray-300'
-                            }`}
-                          />
-                          {formErrors.references[index]?.email && (
-                            <p className="mt-1 text-sm text-red-600">{formErrors.references[index].email}</p>
+
+                  <div className="space-y-4">
+                    {formData.references.map((reference, index) => (
+                      <div key={index} className="bg-white rounded-lg ring-1 ring-primary-100 p-4 sm:p-5">
+                        <div className="flex items-center justify-between mb-3">
+                          <h4 className="font-display tracking-[0.06em] uppercase text-primary-900 text-sm sm:text-base">Reference #{index + 1}</h4>
+                          {index > 0 && (
+                            <button type="button" onClick={() => removeReference(index)} className="text-xs text-red-600 hover:text-red-700 font-semibold">
+                              Remove
+                            </button>
                           )}
                         </div>
-                        
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Phone Number
-                          </label>
-                          <input
-                            type="tel"
-                            required
-                            value={reference.phone}
-                            onChange={(e) => handleReferenceChange(index, 'phone', e.target.value)}
-                            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                              formErrors.references[index]?.phone ? 'border-red-500' : 'border-gray-300'
-                            }`}
-                            placeholder="(555) 555-5555"
-                          />
-                          {formErrors.references[index]?.phone && (
-                            <p className="mt-1 text-sm text-red-600">{formErrors.references[index].phone}</p>
-                          )}
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                          <div>
+                            <label className="stat-label text-primary-700 block mb-1.5">Full Name</label>
+                            <input
+                              type="text" required value={reference.name}
+                              onChange={(e) => handleReferenceChange(index, 'name', e.target.value)}
+                              className="w-full h-11 px-4 bg-white border border-primary-200 rounded-lg text-primary-900 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500 transition-colors"
+                            />
+                          </div>
+                          <div>
+                            <label className="stat-label text-primary-700 block mb-1.5">Relationship</label>
+                            <input
+                              type="text" required value={reference.relationship}
+                              onChange={(e) => handleReferenceChange(index, 'relationship', e.target.value)}
+                              className="w-full h-11 px-4 bg-white border border-primary-200 rounded-lg text-primary-900 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500 transition-colors"
+                            />
+                          </div>
+                          <div>
+                            <label className="stat-label text-primary-700 block mb-1.5">Email Address</label>
+                            <input
+                              type="email" required value={reference.email}
+                              onChange={(e) => handleReferenceChange(index, 'email', e.target.value)}
+                              className={`w-full h-11 px-4 bg-white border rounded-lg text-primary-900 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500 transition-colors ${formErrors.references[index]?.email ? 'border-red-500' : 'border-primary-200'}`}
+                            />
+                            {formErrors.references[index]?.email && <p className="mt-1.5 text-xs text-red-600">{formErrors.references[index].email}</p>}
+                          </div>
+                          <div>
+                            <label className="stat-label text-primary-700 block mb-1.5">Phone Number</label>
+                            <input
+                              type="tel" required placeholder="(555) 555-5555" value={reference.phone}
+                              onChange={(e) => handleReferenceChange(index, 'phone', e.target.value)}
+                              className={`w-full h-11 px-4 bg-white border rounded-lg text-primary-900 placeholder:text-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500 transition-colors ${formErrors.references[index]?.phone ? 'border-red-500' : 'border-primary-200'}`}
+                            />
+                            {formErrors.references[index]?.phone && <p className="mt-1.5 text-xs text-red-600">{formErrors.references[index].phone}</p>}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                </fieldset>
 
-                {/* Submit Button */}
-                <div>
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className={`w-full px-6 py-4 text-white font-bold uppercase tracking-wider text-lg transition-all duration-200 rounded-none
-                      ${isSubmitting
-                        ? 'bg-gray-400 cursor-not-allowed'
-                        : 'bg-primary-600 hover:bg-primary-700 active:bg-primary-800'
-                      }`}
-                  >
-                    {isSubmitting ? (
-                      <span className="flex items-center justify-center">
-                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        Submitting...
-                      </span>
-                    ) : 'SUBMIT APPLICATION →'}
-                  </button>
-                </div>
+                {/* Submit */}
+                <button
+                  type="submit" disabled={isSubmitting}
+                  className={`w-full inline-flex items-center justify-center gap-2 h-14 rounded-md font-display tracking-[0.14em] uppercase text-sm sm:text-base text-white transition-all duration-200 ${
+                    isSubmitting
+                      ? 'bg-primary-400 cursor-not-allowed'
+                      : 'bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-700 hover:to-primary-600 shadow-[0_18px_36px_-12px_rgba(2,132,199,0.55)] hover:shadow-[0_24px_44px_-12px_rgba(2,132,199,0.7)]'
+                  }`}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                      </svg>
+                      Submitting…
+                    </>
+                  ) : (
+                    <>
+                      Submit Application
+                      <ArrowRightIcon className="w-5 h-5" />
+                    </>
+                  )}
+                </button>
 
-                {/* Status Message */}
                 {submitStatus.type && (
                   <motion.div
-                    initial={{ opacity: 0, y: 10 }}
+                    initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className={`p-4 rounded-lg ${
+                    className={`p-4 rounded-lg flex items-start gap-2.5 ${
                       submitStatus.type === 'success'
-                        ? 'bg-green-50 text-green-800 border border-green-200'
-                        : 'bg-red-50 text-red-800 border border-red-200'
+                        ? 'bg-emerald-50 text-emerald-900 border border-emerald-200'
+                        : 'bg-red-50 text-red-900 border border-red-200'
                     }`}
                   >
-                    <div className="flex items-center">
-                      {submitStatus.type === 'success' ? (
-                        <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
-                        </svg>
-                      ) : (
-                        <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd"/>
-                        </svg>
-                      )}
-                      {submitStatus.message}
-                    </div>
+                    {submitStatus.type === 'success' ? (
+                      <svg className="w-5 h-5 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                    ) : (
+                      <svg className="w-5 h-5 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                      </svg>
+                    )}
+                    <span className="text-sm leading-relaxed">{submitStatus.message}</span>
                   </motion.div>
                 )}
               </form>
@@ -635,39 +616,34 @@ export default function CareersPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="relative py-20">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary-800 via-primary-700 to-primary-600">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `repeating-linear-gradient(45deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 1px, transparent 1px, transparent 40px)`,
-            backgroundSize: '40px 40px'
-          }}></div>
-        </div>
+      {/* ============ CTA INTERSTITIAL ============ */}
+      <section className="relative overflow-hidden py-14 sm:py-20 text-center bg-gradient-to-br from-primary-500 via-primary-400 to-primary-500">
+        <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[700px] h-[300px] rounded-full bg-white/15 blur-3xl pointer-events-none" />
 
-        <div className="container mx-auto px-4 relative">
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center">
-              <h2 className="display-heading text-white mb-4" style={{ fontSize: 'clamp(2rem,5vw,3.5rem)' }}>
-                QUESTIONS?<br />GIVE US A CALL.
-              </h2>
-              <p className="text-lg text-primary-200 mb-8 max-w-lg mx-auto">
-                We&apos;d love to talk to you about joining the team.
-              </p>
-              <div className="flex flex-col sm:flex-row justify-center gap-4">
-                <a
-                  href="tel:+17704950050"
-                  className="inline-flex items-center justify-center px-8 py-4 bg-white text-primary-800 font-bold uppercase tracking-wider text-sm transition-all duration-200 hover:bg-primary-50"
-                >
-                  (770) 495-0050
-                </a>
-                <a
-                  href="#apply-form"
-                  className="inline-flex items-center justify-center px-8 py-4 border-2 border-white text-white font-bold uppercase tracking-wider text-sm transition-all duration-200 hover:bg-white hover:text-primary-800"
-                >
-                  Apply Online
-                </a>
-              </div>
-            </div>
+        <div className="container relative">
+          <p className="stat-label text-primary-50 mb-3">Got Questions?</p>
+          <h2
+            className="font-display text-white leading-[0.9] mb-6"
+            style={{ fontSize: 'clamp(2.25rem,7vw,4.5rem)', letterSpacing: '0.005em' }}
+          >
+            Give Us
+            <br />
+            <span className="text-primary-100">A Call.</span>
+          </h2>
+          <p className="text-primary-50/90 text-base sm:text-lg max-w-lg mx-auto mb-8">
+            We&apos;d love to talk to you about joining the team.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <a href="tel:+17704950050" className="btn-cta bg-white text-primary-700 hover:bg-primary-50">
+              Call (770) 495-0050
+            </a>
+            <a
+              href="#apply-form"
+              onClick={(e) => { e.preventDefault(); document.getElementById('apply-form')?.scrollIntoView({ behavior: 'smooth' }); }}
+              className="btn-cta btn-cta-ghost"
+            >
+              Apply Online ↓
+            </a>
           </div>
         </div>
       </section>

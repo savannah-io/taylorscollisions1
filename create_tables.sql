@@ -64,3 +64,27 @@ CREATE POLICY "Allow service role read" ON contact_messages
 -- Allow anon to upload to resumes bucket
 -- CREATE POLICY "Allow public upload" ON storage.objects
 --   FOR INSERT TO anon WITH CHECK (bucket_id = 'resumes');
+
+-- ============================================================
+-- Appointment requests (custom BookingCalendar component).
+-- Email via /api/notify is the source of truth; this table is
+-- a best-effort log so the shop can review requests in Supabase.
+-- ============================================================
+CREATE TABLE IF NOT EXISTS appointment_requests (
+  id             uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at     timestamptz NOT NULL DEFAULT now(),
+  name           text NOT NULL,
+  phone          text NOT NULL,
+  vehicle        text,
+  notes          text,
+  preferred_date text,
+  preferred_time text
+);
+
+ALTER TABLE appointment_requests ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow public insert" ON appointment_requests
+  FOR INSERT TO anon WITH CHECK (true);
+
+CREATE POLICY "Allow service role read" ON appointment_requests
+  FOR SELECT USING (auth.role() = 'service_role');

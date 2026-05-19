@@ -4,8 +4,12 @@
 
 @layer base {
   :root {
-    --foreground-rgb: 0, 0, 0;
+    --foreground-rgb: 14, 22, 38;
     --background-rgb: 255, 255, 255;
+    --header-h: 48px;
+    --header-h-md: 64px;
+    --announce-h: 26px;
+    --announce-h-md: 32px;
   }
 
   html {
@@ -13,6 +17,7 @@
     height: 100%;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
   body {
@@ -20,163 +25,533 @@
     color: rgb(var(--foreground-rgb));
     background: rgb(var(--background-rgb));
     overflow-x: hidden;
+    font-family: var(--font-body), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    letter-spacing: -0.011em;
   }
 
   ::selection {
-    @apply bg-primary-600/20 text-primary-900;
+    @apply bg-primary-600/25 text-primary-900;
   }
 }
 
 @layer components {
+  /* ===== HERO =====
+     Locks to viewport height so stats are always visible without scrolling.
+     Desktop: 2-col grid (content left / 3D model right).
+     Mobile: stacked, model is subtler accent. */
   .hero-section {
     position: relative;
-    background: url('/images/back3.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    margin-top: -64px;
-    @apply relative overflow-hidden pt-[64px] pb-20;
+    overflow: hidden;
+    background-color: #0c1830;
+    min-height: 100svh;
+    padding-top: calc(var(--header-h) + var(--announce-h));
+    padding-bottom: 1.25rem;
+    display: flex;
+    align-items: flex-start;
   }
 
   @media (min-width: 768px) {
     .hero-section {
-      margin-top: 0;
-      height: calc(100vh - 64px);
-      padding-top: 0;
-      padding-bottom: 0;
+      padding-top: calc(var(--header-h-md) + var(--announce-h-md) + 0.5rem);
+      padding-bottom: 2.75rem;
+      max-height: 100vh;
     }
   }
-
-  @media (max-width: 767px) {
+  /* Desktop: vertically center hero content in the available space below the
+     fixed header. Mobile stays top-aligned. */
+  @media (min-width: 1024px) {
     .hero-section {
-      background-image: url('/images/TC-MOBILE-BG.png');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-attachment: scroll;
+      align-items: center;
     }
   }
 
-  .hero-section::before {
-    display: none;
+  /* Mobile: single column stack with explicit order so 3D sits between
+     headline and CTAs. Desktop: grid-template-areas put headline + rest in
+     left column with the 3D model spanning the right column. */
+  .hero-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
   }
 
-  .hero-content {
-    position: relative;
-    z-index: 2;
+  /* Mobile/tablet only: with the 3D model relocated off the hero, keep the
+     remaining content (eyebrow → headline → subhead → CTAs → stats) as ONE
+     cohesive group and center that group vertically in the hero. Even,
+     deliberate internal spacing — not scattered. Gated to max-width:1023px
+     so the desktop grid layout is untouched. */
+  @media (max-width: 1023px) {
+    .hero-section {
+      align-items: center;
+    }
+    .hero-grid {
+      gap: 1.25rem;
+    }
+
+    /* --- Eyebrow → centered pill that pops --- */
+    .hero-eyebrow {
+      justify-content: center;
+      padding: 0.4rem 0.95rem;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(125, 211, 252, 0.3);
+      backdrop-filter: blur(4px);
+      margin-bottom: 1.1rem;
+    }
+    .hero-eyebrow-dash { display: none; }
+
+    /* --- Headline: tighter as a single power unit --- */
+    .hero-headline h1 { line-height: 0.84; }
+    .hero-headline { margin-bottom: 0; }
+
+    /* --- CTAs: shrink. Compact, side-by-side, not chunky full-width. --- */
+    .hero-cta-row { justify-content: center; }
+    .hero-rest .btn-cta {
+      padding: 0.7rem 1.15rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      flex: 0 1 auto;
+    }
+
+    /* --- Stats: a touch of separation from the CTAs --- */
+    .hero-stats { margin-top: 0.25rem; }
+
+    /* --- Scroll cue pinned to the bottom of the hero --- */
+    .hero-scroll-cue {
+      position: absolute;
+      left: 50%;
+      bottom: 0.9rem;
+      transform: translateX(-50%);
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      color: rgba(186, 230, 253, 0.75);
+      background: none;
+      border: none;
+      cursor: pointer;
+      animation: scroll-bob 2s ease-in-out infinite;
+    }
+    .hero-scroll-label {
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+    }
+    .hero-scroll-cue svg { width: 1.1rem; height: 1.1rem; }
   }
 
-  .container {
-    @apply mx-auto px-4;
+  @keyframes scroll-bob {
+    0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.7; }
+    50% { transform: translateX(-50%) translateY(5px); opacity: 1; }
   }
+  /* Mobile order: headline → 3D model → CTAs (subhead+buttons) → stats.
+     Desktop overrides via grid-template-areas. */
+  .hero-headline { order: 1; }
+  .hero-model-wrap { order: 2; }
+  .hero-rest { order: 3; }
+  .hero-stats { order: 4; }
 
-  /* Gradient text animation */
-  .animate-gradient {
-    background-size: 200% 200%;
-    animation: gradient 15s ease infinite;
-  }
-
-  /* Add padding to account for fixed header - exclude home page */
-  main:not(:has(> .hero-section)) {
-    @apply pt-14 md:pt-0;
-  }
-
-  /* Font settings */
-  .font-sans {
-    font-family: var(--font-inter), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    letter-spacing: -0.025em;
-  }
-
-  .font-display {
-    font-family: var(--font-montserrat), var(--font-inter), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    letter-spacing: -0.025em;
-  }
-
-  /* Button styles */
-  .btn {
-    @apply inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium transition-all duration-200 ease-out;
-  }
-
-  .btn-primary {
-    @apply bg-primary-600 text-white hover:bg-primary-700 shadow-lg hover:shadow-xl;
-  }
-
-  .btn-outline {
-    @apply border-2 border-white/80 text-white hover:bg-white hover:text-primary-900;
-  }
-
-  /* Blob animation */
-  .animate-blob {
-    animation: blob 7s infinite;
-  }
-
-  .animation-delay-2000 {
-    animation-delay: 2s;
-  }
-
-  .animation-delay-4000 {
-    animation-delay: 4s;
-  }
-  /* Bold display heading utility */
-  .display-heading {
-    font-family: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
-    font-weight: 900;
-    letter-spacing: -0.04em;
+  /* Mobile-only h1 spread + size bump — slight letter-spacing, more
+     line-height. Desktop overrides below. */
+  .hero-headline h1 {
+    letter-spacing: 0.018em;
     line-height: 0.92;
+    font-size: clamp(3rem, 13.5vw, 6.5rem);
+  }
+  /* Mobile / tablet: per-line font sizes so each row fills the column.
+     "EXPERT" + "REPAIR" (6 chars) get a bigger size than "AUTO BODY"
+     (9 chars) — magazine-headline style where every line spans the
+     same horizontal width. Active only below the desktop breakpoint. */
+  @media (max-width: 1023px) {
+    /* Per-line sizing on mobile/tablet. EXPERT + REPAIR slightly bigger
+       than AUTO BODY so each line reads at similar visual weight without
+       dominating the hero or pushing other elements off-screen. */
+    .hero-headline h1 .hero-line-tall {
+      font-size: clamp(3rem, 16vw, 7rem);
+      /* Heavy letter-spacing so 6-char EXPERT/REPAIR fill the column width. */
+      letter-spacing: 0.22em;
+    }
+    .hero-headline h1 .hero-line-wide {
+      font-size: clamp(2.5rem, 13vw, 5.75rem);
+      /* Lighter spacing — AUTO BODY already runs wide with a space. */
+      letter-spacing: 0.08em;
+    }
+    /* Mobile: center everything in the hero column. Desktop keeps the
+       left-aligned grid layout. */
+    .hero-headline,
+    .hero-rest,
+    .hero-stats {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero-rest > .flex { justify-content: center; }
+
+    /* ===== Mobile headline lockup — sculpted editorial type ===== */
+    .hl-m {
+      position: relative;
+      display: block;
+      text-align: center;
+      letter-spacing: normal;
+      padding: 0.35rem 0 0.1rem;
+    }
+    .hl-glow {
+      position: absolute;
+      left: 50%;
+      top: 52%;
+      width: 116%;
+      height: 150%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(
+        56% 50% at 50% 50%,
+        rgba(56, 189, 248, 0.34) 0%,
+        rgba(14, 165, 233, 0.12) 42%,
+        rgba(12, 24, 48, 0) 72%
+      );
+      filter: blur(34px);
+      opacity: 0.6;
+      z-index: 0;
+      pointer-events: none;
+      animation: hl-breathe 6.5s ease-in-out infinite;
+    }
+    .hl-clip {
+      position: relative;
+      z-index: 1;
+      display: block;
+      overflow: hidden;
+      line-height: 0.82;
+    }
+    .hl-clip-kicker { overflow: visible; }
+    .hl-word {
+      display: block;
+      will-change: transform;
+      line-height: 0.82;
+    }
+    .hl-expert,
+    .hl-repair {
+      font-size: clamp(3.7rem, 20vw, 6.25rem);
+      letter-spacing: 0.012em;
+      line-height: 0.8;
+    }
+    .hl-expert {
+      color: #ffffff;
+      text-shadow: 0 8px 26px rgba(0, 0, 0, 0.45);
+    }
+    .hl-repair {
+      color: #7dd3fc;
+      text-shadow: 0 0 34px rgba(56, 189, 248, 0.5),
+        0 8px 26px rgba(0, 0, 0, 0.4);
+    }
+    .hl-kicker {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.7rem;
+      margin: 0.4rem 0 0.34rem;
+      font-size: clamp(0.95rem, 4.6vw, 1.45rem);
+      letter-spacing: 0.42em;
+      color: rgba(255, 255, 255, 0.82);
+      white-space: nowrap;
+      will-change: transform;
+    }
+    .hl-rule {
+      flex: 0 0 auto;
+      width: clamp(1.5rem, 9vw, 3rem);
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        rgba(125, 211, 252, 0) 0%,
+        rgba(125, 211, 252, 0.85) 50%,
+        rgba(125, 211, 252, 0) 100%
+      );
+    }
+
+    /* ===== Mobile supporting line (replaces pill chips) ===== */
+    .hero-subhead-m {
+      font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+      text-transform: none;
+      font-weight: 400;
+      font-size: clamp(0.84rem, 3.7vw, 1rem);
+      line-height: 1.55;
+      letter-spacing: 0.004em;
+      color: rgba(255, 255, 255, 0.74);
+      max-width: 30rem;
+      margin: 1.15rem auto 1.45rem;
+      text-wrap: balance;
+    }
+    .hero-subhead-m strong {
+      color: #bae6fd;
+      font-weight: 600;
+    }
+
+    /* ===== Scroll cue — travelling-dot track ===== */
+    .hero-scroll-cue {
+      animation: none;
+      gap: 0.55rem;
+    }
+    .hero-scroll-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.24em;
+      color: rgba(186, 230, 253, 0.85);
+    }
+    .hero-scroll-track {
+      position: relative;
+      width: 1.5px;
+      height: 2.1rem;
+      border-radius: 1px;
+      background: linear-gradient(
+        to bottom,
+        rgba(186, 230, 253, 0.45),
+        rgba(186, 230, 253, 0.04)
+      );
+      overflow: hidden;
+    }
+    .hero-scroll-dot {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      width: 4px;
+      height: 8px;
+      border-radius: 2px;
+      background: #7dd3fc;
+      box-shadow: 0 0 8px rgba(125, 211, 252, 0.85);
+      transform: translate(-50%, -120%);
+      animation: scroll-dot 1.9s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
+  }
+
+  @keyframes hl-breathe {
+    0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+    50% { opacity: 0.75; transform: translate(-50%, -50%) scale(1.06); }
+  }
+  @keyframes scroll-dot {
+    0% { transform: translate(-50%, -120%); opacity: 0; }
+    22% { opacity: 1; }
+    78% { opacity: 1; }
+    100% { transform: translate(-50%, 200%); opacity: 0; }
+  }
+  @media (min-width: 1024px) {
+    /* Desktop: bigger headline, tighter tracking, original line-height.
+       Sized so the full hero (headline + subhead + CTAs + stats) clears
+       100svh with a small margin under the stats. */
+    .hero-headline h1 {
+      letter-spacing: 0.005em;
+      line-height: 0.86;
+      font-size: clamp(4.5rem, 8.2vw, 9rem);
+    }
+    .hero-rest > p {
+      font-size: clamp(0.95rem, 1.3vw, 1.2rem) !important;
+      margin-top: 1rem;
+      margin-bottom: 1.25rem;
+    }
+    .hero-stats .font-display {
+      font-size: clamp(1.45rem, 2.55vw, 2.2rem) !important;
+    }
+    .hero-stats .stat-label {
+      font-size: 0.72rem !important;
+    }
+    .hero-rest .btn-cta {
+      padding-top: 0.9rem;
+      padding-bottom: 0.9rem;
+      padding-left: 1.75rem;
+      padding-right: 1.75rem;
+      font-size: 0.88rem;
+    }
+    /* Pull the stats border-top closer to the buttons. */
+    .hero-stats > div {
+      margin-top: 1.1rem !important;
+      padding-top: 1rem !important;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+      grid-template-rows: auto auto auto;
+      grid-template-areas:
+        "headline model"
+        "rest     model"
+        "stats    model";
+      column-gap: 3rem;
+      row-gap: 0;
+      align-items: center;
+    }
+    .hero-headline { grid-area: headline; order: unset; }
+    .hero-model-wrap { grid-area: model; order: unset; align-self: center; }
+    .hero-rest { grid-area: rest; order: unset; }
+    .hero-stats { grid-area: stats; order: unset; }
+  }
+
+  .hero-content { position: relative; z-index: 2; max-width: 38rem; }
+
+  .hero-model {
+    position: relative;
+    width: 100%;
+    z-index: 2;
+    aspect-ratio: 16 / 10;
+    max-height: 30vh;
+  }
+
+  @media (min-width: 1024px) {
+    .hero-model {
+      aspect-ratio: 5 / 4;
+      max-height: 60vh;
+    }
+  }
+
+  .hero-model-inner {
+    position: absolute;
+    inset: 0;
+    border-radius: 1.5rem;
+    overflow: hidden;
+    background:
+      radial-gradient(60% 60% at 50% 50%, rgba(14,165,233,0.16) 0%, rgba(7,89,133,0) 60%),
+      linear-gradient(160deg, rgba(2,132,199,0.10), rgba(12,74,110,0.30));
+    box-shadow:
+      inset 0 0 0 1px rgba(125,211,252,0.18),
+      0 30px 60px -30px rgba(14,165,233,0.55);
+  }
+
+  .hero-model-inner > iframe,
+  .hero-model-inner > div {
+    position: relative;
+    z-index: 1;
+  }
+
+  .container { @apply mx-auto px-4; }
+
+  /* Fonts */
+  .font-body, .font-sans {
+    font-family: var(--font-body), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    letter-spacing: -0.011em;
+  }
+  .font-display, .display-heading {
+    font-family: var(--font-display), 'Bebas Neue', 'Impact', ui-sans-serif, system-ui, sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.005em;
+    line-height: 0.86;
     text-transform: uppercase;
   }
 
-  /* Stat label utility */
+  /* Buttons */
+  .btn {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium;
+    transition: transform 220ms cubic-bezier(.2,.7,.2,1), background-color 220ms, box-shadow 220ms, border-color 220ms;
+  }
+  .btn-primary { @apply bg-primary-600 text-white hover:bg-primary-700 shadow-lg hover:shadow-xl; }
+  .btn-outline { @apply border-2 border-white/80 text-white hover:bg-white hover:text-primary-900; }
+
+  .animate-blob { animation: blob 7s infinite; }
+  .animation-delay-2000 { animation-delay: 2s; }
+  .animation-delay-4000 { animation-delay: 4s; }
+
   .stat-label {
-    font-family: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
-    font-weight: 700;
-    letter-spacing: 0.15em;
+    font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     font-size: 0.7rem;
+    color: rgba(255,255,255,0.58);
   }
+
+  .btn-cta {
+    @apply inline-flex items-center justify-center px-7 py-3.5 rounded-md font-semibold tracking-wide uppercase text-sm;
+    transition: transform 220ms cubic-bezier(.2,.7,.2,1), box-shadow 220ms, background-color 220ms;
+    letter-spacing: 0.12em;
+  }
+  .btn-cta-primary {
+    background: linear-gradient(180deg, #0ea5e9 0%, #0284c7 100%);
+    color: #fff;
+    box-shadow: 0 14px 40px -10px rgba(14,165,233,0.55), inset 0 1px 0 rgba(255,255,255,0.25);
+  }
+  .btn-cta-primary:hover { transform: translateY(-1px); box-shadow: 0 18px 44px -10px rgba(14,165,233,0.7), inset 0 1px 0 rgba(255,255,255,0.25); }
+  .btn-cta-ghost {
+    color: #fff;
+    border: 1.5px solid rgba(255,255,255,0.55);
+    background: rgba(255,255,255,0.04);
+    backdrop-filter: blur(4px);
+  }
+  .btn-cta-ghost:hover { background: rgba(255,255,255,0.1); border-color: #fff; transform: translateY(-1px); }
+
+  /* ===== Header / Announcement bar ===== */
+  .announce-bar {
+    background: linear-gradient(90deg, #075985 0%, #0284c7 35%, #0ea5e9 65%, #0284c7 100%);
+    background-size: 200% 100%;
+    animation: announce-shift 18s ease-in-out infinite;
+    color: #fff;
+    box-shadow: inset 0 -1px 0 rgba(255,255,255,0.12);
+  }
+
+  .nav-link {
+    font-family: var(--font-display), 'Bebas Neue', 'Impact', sans-serif;
+    letter-spacing: 0.12em;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    color: #0c4a6e;
+    position: relative;
+    padding: 0.6rem 0.2rem;
+    transition: color 200ms ease;
+  }
+  .nav-link:hover { color: #0284c7; }
+  .nav-link.active { color: #0ea5e9; }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 0.25rem;
+    height: 2px;
+    background: linear-gradient(90deg, #0ea5e9, #38bdf8);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 280ms cubic-bezier(.2,.7,.2,1);
+    border-radius: 2px;
+  }
+  .nav-link:hover::after, .nav-link.active::after { transform: scaleX(1); }
 }
 
 @layer utilities {
-  /* Smooth transitions */
-  .transition-default {
-    @apply transition-all duration-200 ease-out;
+  .transition-default { transition: transform 200ms ease-out, opacity 200ms ease-out, color 200ms ease-out; }
+  .focus-ring { @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-600; }
+  .text-gradient { @apply text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-primary-700; }
+
+  /* SVG grain */
+  .grain { position: relative; }
+  .grain::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.03;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.7'/></svg>");
   }
 
-  /* Custom focus styles */
-  .focus-ring {
-    @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-600;
-  }
-
-  /* Text gradient */
-  .text-gradient {
-    @apply text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-primary-800;
+  /* xs breakpoint for hero CTAs */
+  @media (min-width: 420px) {
+    .xs\:flex-row { flex-direction: row; }
   }
 }
 
 @keyframes gradient {
-  0% {
-    background-position: 0% 50%
-  }
-  50% {
-    background-position: 100% 50%
-  }
-  100% {
-    background-position: 0% 50%
-  }
+  0% { background-position: 0% 50% }
+  50% { background-position: 100% 50% }
+  100% { background-position: 0% 50% }
 }
 
 @keyframes blob {
-  0% {
-    transform: translate(0px, 0px) scale(1);
-  }
-  33% {
-    transform: translate(30px, -50px) scale(1.1);
-  }
-  66% {
-    transform: translate(-20px, 20px) scale(0.9);
-  }
-  100% {
-    transform: translate(0px, 0px) scale(1);
-  }
-} 
+  0%   { transform: translate(0px, 0px) scale(1); }
+  33%  { transform: translate(30px, -50px) scale(1.1); }
+  66%  { transform: translate(-20px, 20px) scale(0.9); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+@keyframes announce-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}

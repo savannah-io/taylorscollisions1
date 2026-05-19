@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import nodemailer from 'nodemailer'
 
-const NOTIFY_EMAIL = process.env.NOTIFY_EMAIL || 'support@taylorscollision.com'
+const NOTIFY_EMAIL = process.env.NOTIFY_EMAIL || 'info@taylorscollision.com'
 
 function createTransport() {
   return nodemailer.createTransport({
@@ -67,6 +67,22 @@ export async function POST(req: NextRequest) {
           <tr style="background:#f5f7fa"><td style="padding:8px;font-weight:bold">Email</td><td style="padding:8px"><a href="mailto:${data.invitee_email || ''}">${data.invitee_email || ''}</a></td></tr>
           <tr><td style="padding:8px;font-weight:bold">Time</td><td style="padding:8px">${data.event_start_time || ''}</td></tr>
           <tr style="background:#f5f7fa"><td style="padding:8px;font-weight:bold">Event Type</td><td style="padding:8px">${data.event_type_name || 'Collision Estimate'}</td></tr>
+        </table>
+      `
+      break
+    }
+    case 'appointment_request': {
+      subject = `New Booking Request — ${data.name || 'Customer'} — ${data.preferred_date || ''} ${data.preferred_time || ''}`
+      html = `
+        <h2 style="color:#1e3a5f">New Booking Request — Taylor's Collision</h2>
+        <p style="font-family:sans-serif;color:#b91c1c;font-weight:bold">⚠ Request — call the customer to confirm this slot.</p>
+        <table style="border-collapse:collapse;width:100%;font-family:sans-serif">
+          <tr><td style="padding:8px;font-weight:bold;width:160px">Name</td><td style="padding:8px">${data.name || ''}</td></tr>
+          <tr style="background:#f5f7fa"><td style="padding:8px;font-weight:bold">Phone</td><td style="padding:8px"><a href="tel:${data.phone || ''}">${data.phone || ''}</a></td></tr>
+          <tr><td style="padding:8px;font-weight:bold">Requested Date</td><td style="padding:8px">${data.preferred_date || ''}</td></tr>
+          <tr style="background:#f5f7fa"><td style="padding:8px;font-weight:bold">Requested Time</td><td style="padding:8px">${data.preferred_time || ''}</td></tr>
+          <tr><td style="padding:8px;font-weight:bold">Vehicle</td><td style="padding:8px">${data.vehicle || '—'}</td></tr>
+          <tr style="background:#f5f7fa"><td style="padding:8px;font-weight:bold;vertical-align:top">Details</td><td style="padding:8px;white-space:pre-wrap">${data.notes || '—'}</td></tr>
         </table>
       `
       break
