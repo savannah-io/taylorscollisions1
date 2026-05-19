@@ -87,6 +87,9 @@ export default function BookingCalendar() {
       vehicle: form.vehicle.trim(),
       notes: form.notes.trim(),
       preferred_date: date ? niceDate(date) : '',
+      preferred_date_iso: date
+        ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+        : '',
       preferred_time: time || '',
     }
     // Supabase is best-effort; the email is the source of truth so a
