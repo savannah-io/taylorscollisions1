@@ -80,6 +80,7 @@ export async function POST(req: NextRequest) {
         phone: data.phone || '',
         vehicle: data.vehicle || '',
         date: data.preferred_date || '',
+        iso: data.preferred_date_iso || '',
         time: data.preferred_time || '',
       })
       html = `

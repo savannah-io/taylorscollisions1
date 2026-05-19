@@ -6,6 +6,7 @@ export interface BookingToken {
   phone: string
   vehicle: string
   date: string
+  iso: string // YYYY-MM-DD, for the calendar event
   time: string
 }
 

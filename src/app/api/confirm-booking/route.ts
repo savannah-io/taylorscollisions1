@@ -17,6 +17,82 @@ function createTransport() {
   })
 }
 
+// "9:00 AM" / "12:45 PM" / "4:00 PM" -> { h, m } in 24h
+function parseTime(s: string): { h: number; m: number } | null {
+  const mch = s.trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i)
+  if (!mch) return null
+  let h = parseInt(mch[1], 10)
+  const m = parseInt(mch[2], 10)
+  const pm = mch[3].toUpperCase() === 'PM'
+  if (h === 12) h = pm ? 12 : 0
+  else if (pm) h += 12
+  return { h, m }
+}
+
+const pad = (n: number) => String(n).padStart(2, '0')
+
+// Calendar invite. ORGANIZER = info@, ATTENDEEs = customer + the three
+// shop inboxes, so the event lands on each of their calendars on accept.
+function buildIcs(t: {
+  name: string; email: string; iso: string; time: string; vehicle: string; phone: string
+}): string | null {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(t.iso)) return null
+  const tm = parseTime(t.time)
+  if (!tm) return null
+  const [Y, Mo, D] = t.iso.split('-').map(Number)
+  const startMin = tm.h * 60 + tm.m
+  const endMin = startMin + 30
+  const dt = (mins: number) =>
+    `${Y}${pad(Mo)}${pad(D)}T${pad(Math.floor(mins / 60))}${pad(mins % 60)}00`
+  const stamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'
+  const uid = `${t.iso}-${startMin}-${(t.email || 'guest').replace(/[^a-z0-9]/gi, '')}@taylorscollision.com`
+  const shop = (process.env.NOTIFY_EMAIL || 'info@taylorscollision.com')
+    .split(',').map(s => s.trim()).filter(Boolean)
+  const attendees = [t.email, ...shop]
+    .filter(Boolean)
+    .map(e => `ATTENDEE;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE:mailto:${e}`)
+    .join('\r\n')
+  return [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Taylor\'s Collision//Booking//EN',
+    'CALSCALE:GREGORIAN',
+    'METHOD:REQUEST',
+    'BEGIN:VTIMEZONE',
+    'TZID:America/New_York',
+    'BEGIN:DAYLIGHT',
+    'TZOFFSETFROM:-0500',
+    'TZOFFSETTO:-0400',
+    'TZNAME:EDT',
+    'DTSTART:19700308T020000',
+    'RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU',
+    'END:DAYLIGHT',
+    'BEGIN:STANDARD',
+    'TZOFFSETFROM:-0400',
+    'TZOFFSETTO:-0500',
+    'TZNAME:EST',
+    'DTSTART:19701101T020000',
+    'RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU',
+    'END:STANDARD',
+    'END:VTIMEZONE',
+    'BEGIN:VEVENT',
+    `UID:${uid}`,
+    `DTSTAMP:${stamp}`,
+    `DTSTART;TZID=America/New_York:${dt(startMin)}`,
+    `DTEND;TZID=America/New_York:${dt(endMin)}`,
+    `SUMMARY:Free Collision Estimate — ${t.name || 'Customer'}`,
+    `LOCATION:${SHOP_ADDR}`,
+    `DESCRIPTION:Customer: ${t.name} (${t.phone})\\nVehicle: ${t.vehicle || 'n/a'}\\nBooked via taylorscollision.com`,
+    'ORGANIZER;CN=Taylor\'s Collision:mailto:info@taylorscollision.com',
+    attendees,
+    'STATUS:CONFIRMED',
+    'SEQUENCE:0',
+    'TRANSP:OPAQUE',
+    'END:VEVENT',
+    'END:VCALENDAR',
+  ].join('\r\n')
+}
+
 function page(title: string, bodyHtml: string, status = 200) {
   return new NextResponse(
     `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -67,13 +143,20 @@ export async function POST(req: NextRequest) {
       <p>Please call ${SHOP_PHONE}.</p>`, 400)
   }
 
+  const ics = buildIcs(t)
   try {
     const transporter = createTransport()
     await transporter.sendMail({
       from: `"Taylor's Collision" <${process.env.SMTP_USER}>`,
       to: t.email,
-      bcc: NOTIFY_EMAIL,
+      cc: NOTIFY_EMAIL, // the 3 shop inboxes — invite lands on their calendars
       subject: `Appointment Confirmed — ${t.date} at ${t.time}`,
+      ...(ics
+        ? {
+            icalEvent: { method: 'REQUEST', filename: 'appointment.ics', content: ics },
+            attachments: [{ filename: 'appointment.ics', content: ics, contentType: 'text/calendar; method=REQUEST' }],
+          }
+        : {}),
       html: `
         <div style="font-family:sans-serif;max-width:560px">
           <h2 style="color:#0c4a6e">You're confirmed${t.name ? `, ${t.name.split(' ')[0]}` : ''}! ✅</h2>
