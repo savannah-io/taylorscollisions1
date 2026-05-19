@@ -40,7 +40,7 @@ export default function BookingCalendar() {
   const [date, setDate] = useState<Date | null>(null)
   const [time, setTime] = useState<string | null>(null)
   const [step, setStep] = useState<Step>('date')
-  const [form, setForm] = useState({ name: '', phone: '', vehicle: '', notes: '' })
+  const [form, setForm] = useState({ name: '', email: '', phone: '', vehicle: '', notes: '' })
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -65,7 +65,7 @@ export default function BookingCalendar() {
     d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })
 
   const reset = () => {
-    setDate(null); setTime(null); setForm({ name: '', phone: '', vehicle: '', notes: '' })
+    setDate(null); setTime(null); setForm({ name: '', email: '', phone: '', vehicle: '', notes: '' })
     setError(null); setStep('date')
   }
 
@@ -74,10 +74,15 @@ export default function BookingCalendar() {
       setError('Please add your name and a 10-digit phone number.')
       return
     }
+    if (!/^\S+@\S+\.\S+$/.test(form.email.trim())) {
+      setError('Please add a valid email — that’s where we send your confirmation.')
+      return
+    }
     setSubmitting(true)
     setError(null)
     const payload = {
       name: form.name.trim(),
+      email: form.email.trim(),
       phone: form.phone,
       vehicle: form.vehicle.trim(),
       notes: form.notes.trim(),
@@ -293,6 +298,17 @@ export default function BookingCalendar() {
                   />
                 </div>
                 <div>
+                  <label htmlFor={`${formId}-email`} className="block text-[0.72rem] font-semibold tracking-[0.1em] uppercase text-primary-500 mb-1.5">
+                    Email <span className="text-primary-400">*</span>
+                  </label>
+                  <input
+                    id={`${formId}-email`} required type="email" inputMode="email" value={form.email}
+                    onChange={(e) => setForm({ ...form, email: e.target.value })}
+                    className="w-full px-4 py-3 rounded-xl bg-white ring-1 ring-primary-200 focus:ring-2 focus:ring-primary-500 focus:outline-none text-primary-900 placeholder:text-primary-300 transition-shadow"
+                    placeholder="jane@email.com"
+                  />
+                </div>
+                <div>
                   <label htmlFor={`${formId}-phone`} className="block text-[0.72rem] font-semibold tracking-[0.1em] uppercase text-primary-500 mb-1.5">
                     Phone <span className="text-primary-400">*</span>
                   </label>
@@ -339,7 +355,7 @@ export default function BookingCalendar() {
                   {!submitting && <ArrowRightIcon className="w-4 h-4 ml-2" />}
                 </button>
                 <p className="text-center text-primary-500/70 text-xs">
-                  We&apos;ll text or call to confirm — usually within an hour during business hours.
+                  Once the shop approves your time, a confirmation lands in your inbox.
                 </p>
               </form>
             </motion.div>
@@ -367,8 +383,9 @@ export default function BookingCalendar() {
                 {date && niceDate(date)} · {time}
               </p>
               <p className="text-primary-700/70 text-sm max-w-sm mx-auto mb-6">
-                A team member will call <span className="font-semibold text-primary-900">{form.phone}</span> shortly
-                to lock it in. Need it sooner?
+                We&apos;ll review it and email a confirmation to{' '}
+                <span className="font-semibold text-primary-900">{form.email}</span>.
+                Need it sooner? Give us a call.
               </p>
               <a href={`tel:${TEL}`} className="btn-cta btn-cta-primary w-full sm:w-auto">
                 Call {PHONE}

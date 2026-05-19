@@ -74,6 +74,7 @@ CREATE TABLE IF NOT EXISTS appointment_requests (
   id             uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   created_at     timestamptz NOT NULL DEFAULT now(),
   name           text NOT NULL,
+  email          text,
   phone          text NOT NULL,
   vehicle        text,
   notes          text,
