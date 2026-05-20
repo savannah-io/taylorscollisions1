@@ -95,7 +95,7 @@ export default function Footer() {
           {/* Brand */}
           <div className="md:col-span-4">
             <Image
-              src="/images/taylors-collision-logo.svg"
+              src="/images/taylors-logo.png"
               alt="Taylor's Collision"
               width={496}
               height={111}
