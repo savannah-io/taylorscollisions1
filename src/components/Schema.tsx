@@ -13,7 +13,7 @@ const SITE_URL = 'https://taylorscollision.com'
 const PHONE = '+1-770-495-0050'
 const PHONE_DISPLAY = '(770) 495-0050'
 const BUSINESS_NAME = "Taylor's Collision"
-const LOGO_URL = `${SITE_URL}/images/TC-TITLE.png`
+const LOGO_URL = `${SITE_URL}/images/taylors-collision-logo.svg`
 const HERO_IMAGE = `${SITE_URL}/images/back3.jpg`
 
 // Duluth, GA — 2785 Buford Hwy Ste 101-C, Duluth, GA 30096
