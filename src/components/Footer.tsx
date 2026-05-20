@@ -95,10 +95,10 @@ export default function Footer() {
           {/* Brand */}
           <div className="md:col-span-4">
             <Image
-              src="/images/TC-TITLE.png"
+              src="/images/taylors-collision-logo.svg"
               alt="Taylor's Collision"
-              width={280}
-              height={64}
+              width={496}
+              height={111}
               className="h-auto w-[230px] object-contain mb-5"
             />
             <p className="text-primary-900/75 leading-relaxed text-[15px] mb-6 max-w-sm">
