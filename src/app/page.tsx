@@ -57,7 +57,7 @@ const FALLBACK_REVIEWS = [
 
 const HERO_STATS = [
   { value: '5.0★', label: 'Google' },
-  { value: '34+', label: 'Reviews' },
+  { value: '140+', label: 'Reviews' },
   { value: 'LIFETIME', label: 'Warranty' },
   { value: 'FREE', label: 'Estimates' },
 ]
