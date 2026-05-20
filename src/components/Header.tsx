@@ -92,7 +92,7 @@ const Header = () => {
           <nav className="flex items-center justify-between h-12 md:h-16">
             <Link href="/" className="relative group shrink-0">
               <Image
-                src="/images/taylors-collision-logo.svg"
+                src="/images/taylors-logo.png"
                 alt="Taylor's Collision"
                 width={496}
                 height={111}
@@ -158,7 +158,7 @@ const Header = () => {
             >
               <div className="px-5 pt-5 pb-4 border-b border-primary-100">
                 <Link href="/">
-                  <Image src="/images/taylors-collision-logo.svg" alt="Taylor's Collision" width={496} height={111} priority className="h-auto w-[180px] object-contain" />
+                  <Image src="/images/taylors-logo.png" alt="Taylor's Collision" width={496} height={111} priority className="h-auto w-[180px] object-contain" />
                 </Link>
               </div>
 
