@@ -5,8 +5,8 @@ import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { CalendarDaysIcon, CheckCircleIcon, ArrowRightIcon, ArrowLeftIcon } from '@heroicons/react/24/solid'
 import { supabase } from '@/lib/supabase'
 
-/* Mirrors Taylor's real Zoho availability: Mon–Sat, 30-min Free Collision
-   Estimate slots. Sundays closed. Request-based — the shop confirms. */
+/* Real shop hours: Mon–Fri 8:30 AM–5:30 PM, weekends closed.
+   Booking slots inside that window. Request-based — shop confirms. */
 const SLOTS = [
   { period: 'Morning', times: ['9:00 AM', '9:45 AM', '10:30 AM', '11:15 AM'] },
   { period: 'Afternoon', times: ['12:00 PM', '12:45 PM', '1:30 PM', '2:15 PM', '3:00 PM', '3:45 PM', '4:00 PM'] },
@@ -58,7 +58,7 @@ export default function BookingCalendar() {
     return cells
   }, [viewMonth])
 
-  const isClosed = (d: Date) => d.getDay() === 0 // Sundays
+  const isClosed = (d: Date) => d.getDay() === 0 || d.getDay() === 6 // Sat + Sun
   const isPast = (d: Date) => d < today
 
   const niceDate = (d: Date) =>
@@ -219,7 +219,7 @@ export default function BookingCalendar() {
                 })}
               </div>
               <p className="text-center text-primary-500/70 text-xs mt-5">
-                Closed Sundays · Prefer to talk?{' '}
+                Closed weekends · Prefer to talk?{' '}
                 <a href={`tel:${TEL}`} className="font-semibold text-primary-600 underline underline-offset-2">{PHONE}</a>
               </p>
             </motion.div>

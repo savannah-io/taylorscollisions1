@@ -90,7 +90,7 @@ export default function Schema({ breadcrumbs, faqs }: SchemaProps = {}) {
           '@type': 'OpeningHoursSpecification',
           dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
           opens: '08:30',
-          closes: '18:00',
+          closes: '17:30',
         },
       ],
       areaServed: SERVICE_AREA.map((name) => ({
@@ -100,7 +100,7 @@ export default function Schema({ breadcrumbs, faqs }: SchemaProps = {}) {
       aggregateRating: {
         '@type': 'AggregateRating',
         ratingValue: '5.0',
-        reviewCount: 34,
+        reviewCount: 140,
         bestRating: 5,
         worstRating: 1,
       },
@@ -137,8 +137,8 @@ export default function Schema({ breadcrumbs, faqs }: SchemaProps = {}) {
       logo: {
         '@type': 'ImageObject',
         url: LOGO_URL,
-        width: 320,
-        height: 70,
+        width: 496,
+        height: 111,
       },
       sameAs: [
         // Add real URLs once social profiles are created. Keep array even when empty
